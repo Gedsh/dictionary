@@ -3,23 +3,27 @@ package pan.alexander.dictionary.ui.translation
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import by.kirich1409.viewbindingdelegate.viewBinding
 import pan.alexander.dictionary.R
 import pan.alexander.dictionary.databinding.TranslationFragmentBinding
 import pan.alexander.dictionary.domain.entities.Translation
 import pan.alexander.dictionary.ui.base.BaseFragment
-import pan.alexander.dictionary.ui.base.BasePresenter
 import pan.alexander.dictionary.ui.translation.adapter.TranslationAdapter
 import pan.alexander.dictionary.utils.app
 import javax.inject.Inject
 
-class TranslationFragment : BaseFragment<TranslationContract.ViewState>(
+class TranslationFragment : BaseFragment<TranslationViewState>(
     R.layout.translation_fragment
 ) {
 
     @Inject
-    lateinit var presenter: TranslationPresenter
+    lateinit var viewModelFactory: ViewModelProvider.Factory
+
+    override val viewModel by lazy {
+        ViewModelProvider(this, viewModelFactory).get(TranslationViewModel::class.java)
+    }
 
     private val binding by viewBinding(TranslationFragmentBinding::bind)
 
@@ -32,10 +36,6 @@ class TranslationFragment : BaseFragment<TranslationContract.ViewState>(
         }
 
     private val adapter: TranslationAdapter by lazy { TranslationAdapter(onListItemClickListener) }
-
-    override fun getPresenter(): BasePresenter<TranslationContract.ViewState> {
-        return presenter
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         requireContext().app.daggerComponent.inject(this)
@@ -50,6 +50,8 @@ class TranslationFragment : BaseFragment<TranslationContract.ViewState>(
         initSearchFabClickListener()
 
         initReloadButtonClickListener()
+
+        observeViewStateChanges()
     }
 
     private fun initRecycler() {
@@ -64,7 +66,7 @@ class TranslationFragment : BaseFragment<TranslationContract.ViewState>(
                 it.setOnSearchClickListener(object :
                     SearchDialogFragment.OnSearchClickListener {
                     override fun onClick(searchWord: String) {
-                        presenter.getTranslations(searchWord)
+                        viewModel.getTranslations(searchWord)
                     }
                 })
                 it.show(parentFragmentManager, BOTTOM_SHEET_FRAGMENT_DIALOG_TAG)
@@ -74,13 +76,19 @@ class TranslationFragment : BaseFragment<TranslationContract.ViewState>(
 
     private fun initReloadButtonClickListener() {
         binding.reloadButton.setOnClickListener {
-            presenter.getTranslations()
+            viewModel.getTranslations()
         }
     }
 
-    override fun setState(viewState: TranslationContract.ViewState) {
+    private fun observeViewStateChanges() {
+        viewModel.getViewStateLiveData().observe(viewLifecycleOwner) {
+            setState(it)
+        }
+    }
+
+    override fun setState(viewState: TranslationViewState) {
         when (viewState) {
-            is TranslationContract.ViewState.Success -> {
+            is TranslationViewState.Success -> {
                 val translations = viewState.translations
                 if (translations.isEmpty()) {
                     showErrorScreen(getString(R.string.empty_server_response_on_success))
@@ -89,7 +97,7 @@ class TranslationFragment : BaseFragment<TranslationContract.ViewState>(
                     adapter.setData(translations)
                 }
             }
-            is TranslationContract.ViewState.Loading -> {
+            is TranslationViewState.Loading -> {
                 showViewLoading()
                 if (viewState.progress != null) {
                     binding.progressBarHorizontal.visibility = View.VISIBLE
@@ -100,8 +108,11 @@ class TranslationFragment : BaseFragment<TranslationContract.ViewState>(
                     binding.progressBarRound.visibility = View.VISIBLE
                 }
             }
-            is TranslationContract.ViewState.Error -> {
+            is TranslationViewState.Error -> {
                 showErrorScreen(viewState.error.message)
+            }
+            is TranslationViewState.NoConnection -> {
+                showErrorScreen(getString(R.string.device_is_offline))
             }
         }
     }

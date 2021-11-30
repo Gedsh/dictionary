@@ -9,7 +9,7 @@ import javax.inject.Singleton
 @Singleton
 @Component(
     modules = [InteractorModule::class, RepositoryModule::class, DataSourceModule::class,
-        UtilsModule::class, RetrofitModule::class]
+        UtilsModule::class, RetrofitModule::class, ViewModelModule::class]
 )
 interface ApplicationComponent {
 

@@ -4,7 +4,15 @@ import android.app.Application
 import pan.alexander.dictionary.di.ApplicationComponent
 import pan.alexander.dictionary.di.DaggerApplicationComponent
 
-class App: Application() {
+class App : Application() {
+
+    init {
+        System.setProperty("rx3.purge-enabled", "false")
+        System.setProperty("rx2.purge-enabled", "false")
+        System.setProperty("rx3.computation-threads", "1")
+        System.setProperty("rx2.computation-threads", "1")
+    }
+
     companion object {
         const val LOG_TAG = "dictionary"
     }
