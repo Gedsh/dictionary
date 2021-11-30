@@ -1,45 +1,42 @@
 package pan.alexander.dictionary.domain
 
-import io.reactivex.rxjava3.core.Single
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.retryWhen
 import pan.alexander.dictionary.domain.entities.Translation
-import pan.alexander.dictionary.utils.rx.SchedulerProvider
 import java.io.IOException
-import java.util.concurrent.TimeUnit
-import java.util.concurrent.atomic.AtomicInteger
 
 private const val ERROR_RETRY_COUNT = 3
 
 class TranslationInteractorImpl(
     private val remoteRepository: RemoteRepository,
-    private val networkRepository: NetworkRepository,
-    private val schedulerProvider: SchedulerProvider
+    private val networkRepository: NetworkRepository
 ) : TranslationInteractor {
 
-    override fun getTranslations(word: String): Single<TranslationResponseState> =
+    override suspend fun getTranslations(word: String): TranslationResponseState =
         if (networkRepository.isConnectionAvailable()) {
-            requestTranslations(word).map { TranslationResponseState.Success(it) }
+            requestTranslations(word).let { TranslationResponseState.Success(it) }
         } else {
-            Single.just(TranslationResponseState.NoConnection)
+            TranslationResponseState.NoConnection
         }
 
-
-    private fun requestTranslations(word: String): Single<List<Translation>> =
-        remoteRepository.requestTranslations(word)
-            .retryWhen { e ->
-                val counter = AtomicInteger()
-                e.flatMapSingle {
-                    if (it is IOException && counter.getAndIncrement() < ERROR_RETRY_COUNT) {
-                        Single.timer(
-                            counter.get() * 100L,
-                            TimeUnit.MILLISECONDS,
-                            schedulerProvider.io()
-                        )
-                    } else {
-                        Single.error(it)
-                    }
+    private suspend fun requestTranslations(word: String): List<Translation> {
+        var translations: List<Translation>? = null
+        flowOf(word)
+            .map { remoteRepository.requestTranslations(it) }
+            .retryWhen { cause, attempt ->
+                if (cause is IOException && attempt < ERROR_RETRY_COUNT) {
+                    delay(attempt * 100)
+                    true
+                } else {
+                    false
                 }
+            }.collect {
+                translations = it
             }
-            .subscribeOn(schedulerProvider.io())
-            .observeOn(schedulerProvider.ui())
+        return translations ?: emptyList()
+    }
 
 }

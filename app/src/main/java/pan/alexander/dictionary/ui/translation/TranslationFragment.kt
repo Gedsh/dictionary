@@ -5,6 +5,7 @@ import android.view.View
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import by.kirich1409.viewbindingdelegate.viewBinding
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import pan.alexander.dictionary.R
 import pan.alexander.dictionary.databinding.TranslationFragmentBinding
@@ -12,6 +13,7 @@ import pan.alexander.dictionary.domain.entities.Translation
 import pan.alexander.dictionary.ui.base.BaseFragment
 import pan.alexander.dictionary.ui.translation.adapter.TranslationAdapter
 
+@ExperimentalCoroutinesApi
 class TranslationFragment : BaseFragment<TranslationViewState>(
     R.layout.translation_fragment
 ) {

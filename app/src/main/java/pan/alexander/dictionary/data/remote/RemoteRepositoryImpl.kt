@@ -1,6 +1,5 @@
 package pan.alexander.dictionary.data.remote
 
-import io.reactivex.rxjava3.core.Single
 import pan.alexander.dictionary.data.remote.pojo.ErrorResponsePojo
 import pan.alexander.dictionary.domain.RemoteRepository
 import pan.alexander.dictionary.domain.entities.Translation
@@ -16,9 +15,9 @@ class RemoteRepositoryImpl(
         retrofit.responseBodyConverter<ErrorResponsePojo>(ErrorResponsePojo::class.java, arrayOf())
     }
 
-    override fun requestTranslations(word: String): Single<List<Translation>> =
+    override suspend fun requestTranslations(word: String): List<Translation> =
         remoteDataSource.requestTranslations(word)
-            .map { response ->
+            .let { response ->
                 if (response.isSuccessful) {
                     response.body()?.map { TranslationMapper.map(it) } ?: emptyList()
                 } else {

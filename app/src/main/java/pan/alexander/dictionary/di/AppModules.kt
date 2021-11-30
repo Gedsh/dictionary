@@ -1,5 +1,6 @@
 package pan.alexander.dictionary.di
 
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.android.ext.koin.androidContext
@@ -18,11 +19,10 @@ import pan.alexander.dictionary.ui.translation.TranslationViewModel
 import pan.alexander.dictionary.utils.configuration.ConfigurationManager
 import pan.alexander.dictionary.utils.configuration.ConfigurationManagerImpl
 import pan.alexander.dictionary.utils.network.NetworkUtils
-import pan.alexander.dictionary.utils.rx.SchedulerProvider
-import pan.alexander.dictionary.utils.rx.SchedulerProviderImpl
+import pan.alexander.dictionary.utils.coroutines.DispatcherProvider
+import pan.alexander.dictionary.utils.coroutines.DispatcherProviderImpl
 import pan.alexander.dictionary.web.SkyEngApi
 import retrofit2.Retrofit
-import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 
@@ -30,6 +30,7 @@ private const val CALL_TIMEOUT_SEC = 5L
 
 object AppModules {
 
+    @ExperimentalCoroutinesApi
     val vmModule = module {
         viewModel {
             TranslationViewModel(interactor = get())
@@ -40,8 +41,7 @@ object AppModules {
         factory<TranslationInteractor> {
             TranslationInteractorImpl(
                 remoteRepository = get(),
-                networkRepository = get(),
-                schedulerProvider = get()
+                networkRepository = get()
             )
         }
     }
@@ -62,14 +62,17 @@ object AppModules {
 
     val dataSourceModule = module {
         factory<RemoteDataSource> {
-            RemoteDataSourceImpl(skyEngApi = get())
+            RemoteDataSourceImpl(
+                skyEngApi = get(),
+                dispatcherProvider = get()
+            )
         }
     }
 
     val utilModule = module {
 
-        single<SchedulerProvider> {
-            SchedulerProviderImpl()
+        single<DispatcherProvider> {
+            DispatcherProviderImpl()
         }
 
         single {
@@ -90,14 +93,9 @@ object AppModules {
         single<Retrofit> {
             Retrofit.Builder()
                 .baseUrl(get<ConfigurationManager>().getBaseUrl())
-                .addCallAdapterFactory(get<RxJava3CallAdapterFactory>())
                 .addConverterFactory(get<GsonConverterFactory>())
                 .client(get())
                 .build()
-        }
-
-        single<RxJava3CallAdapterFactory> {
-            RxJava3CallAdapterFactory.createSynchronous()
         }
 
         single<GsonConverterFactory> {

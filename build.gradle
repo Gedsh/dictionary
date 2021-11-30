@@ -3,11 +3,11 @@ buildscript {
     ext {
         kotlin_version = '1.6.0'
         koin_version = '3.1.4'
-        rx_kotlin = "3.0.1"
-        rx_android = "3.0.0"
         retrofit_version = "2.9.0"
         okhttp_version = '5.0.0-alpha.3'
         viewbinding_version = '1.5.3'
+        coroutines_version = '1.5.1'
+        lifecycle_viewmodel_ktx = '2.4.0'
     }
     repositories {
         google()

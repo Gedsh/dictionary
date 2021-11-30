@@ -55,15 +55,14 @@ dependencies {
     implementation "io.insert-koin:koin-core:$koin_version"
     implementation "io.insert-koin:koin-android:$koin_version"
 
-    //RxKotlin + RxAndroid
-    implementation "io.reactivex.rxjava3:rxkotlin:$rx_kotlin"
-    implementation "io.reactivex.rxjava3:rxandroid:$rx_android"
+    //Coroutines
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines_version"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_viewmodel_ktx"
 
     //Retrofit + Okhttp + Gson
     implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
     implementation "com.squareup.retrofit2:converter-gson:$retrofit_version"
     implementation "com.squareup.okhttp3:logging-interceptor:$okhttp_version"
-    implementation "com.squareup.retrofit2:adapter-rxjava3:$retrofit_version"
 
     //ViewBinding
     implementation "com.github.kirich1409:viewbindingpropertydelegate-noreflection:$viewbinding_version"
