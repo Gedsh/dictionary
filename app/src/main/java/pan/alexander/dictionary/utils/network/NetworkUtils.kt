@@ -4,12 +4,9 @@ import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Build
-import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
 @Suppress("DEPRECATION")
-class NetworkUtils @Inject constructor(
+class NetworkUtils(
     private val appContext: Context
 ) {
     fun isConnectionAvailable(): Boolean {

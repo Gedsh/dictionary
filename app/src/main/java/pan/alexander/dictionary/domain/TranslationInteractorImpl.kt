@@ -6,11 +6,10 @@ import pan.alexander.dictionary.utils.rx.SchedulerProvider
 import java.io.IOException
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicInteger
-import javax.inject.Inject
 
 private const val ERROR_RETRY_COUNT = 3
 
-class TranslationInteractorImpl @Inject constructor(
+class TranslationInteractorImpl(
     private val remoteRepository: RemoteRepository,
     private val networkRepository: NetworkRepository,
     private val schedulerProvider: SchedulerProvider

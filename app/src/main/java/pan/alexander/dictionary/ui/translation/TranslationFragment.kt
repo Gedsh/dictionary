@@ -3,27 +3,20 @@ package pan.alexander.dictionary.ui.translation
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import by.kirich1409.viewbindingdelegate.viewBinding
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import pan.alexander.dictionary.R
 import pan.alexander.dictionary.databinding.TranslationFragmentBinding
 import pan.alexander.dictionary.domain.entities.Translation
 import pan.alexander.dictionary.ui.base.BaseFragment
 import pan.alexander.dictionary.ui.translation.adapter.TranslationAdapter
-import pan.alexander.dictionary.utils.app
-import javax.inject.Inject
 
 class TranslationFragment : BaseFragment<TranslationViewState>(
     R.layout.translation_fragment
 ) {
 
-    @Inject
-    lateinit var viewModelFactory: ViewModelProvider.Factory
-
-    override val viewModel by lazy {
-        ViewModelProvider(this, viewModelFactory).get(TranslationViewModel::class.java)
-    }
+    override val translationViewModel by viewModel<TranslationViewModel>()
 
     private val binding by viewBinding(TranslationFragmentBinding::bind)
 
@@ -36,11 +29,6 @@ class TranslationFragment : BaseFragment<TranslationViewState>(
         }
 
     private val adapter: TranslationAdapter by lazy { TranslationAdapter(onListItemClickListener) }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        requireContext().app.daggerComponent.inject(this)
-        super.onCreate(savedInstanceState)
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -66,7 +54,7 @@ class TranslationFragment : BaseFragment<TranslationViewState>(
                 it.setOnSearchClickListener(object :
                     SearchDialogFragment.OnSearchClickListener {
                     override fun onClick(searchWord: String) {
-                        viewModel.getTranslations(searchWord)
+                        translationViewModel.getTranslations(searchWord)
                     }
                 })
                 it.show(parentFragmentManager, BOTTOM_SHEET_FRAGMENT_DIALOG_TAG)
@@ -76,12 +64,12 @@ class TranslationFragment : BaseFragment<TranslationViewState>(
 
     private fun initReloadButtonClickListener() {
         binding.reloadButton.setOnClickListener {
-            viewModel.getTranslations()
+            translationViewModel.getTranslations()
         }
     }
 
     private fun observeViewStateChanges() {
-        viewModel.getViewStateLiveData().observe(viewLifecycleOwner) {
+        translationViewModel.getViewStateLiveData().observe(viewLifecycleOwner) {
             setState(it)
         }
     }

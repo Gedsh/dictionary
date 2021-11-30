@@ -6,9 +6,8 @@ import pan.alexander.dictionary.domain.TranslationInteractor
 import pan.alexander.dictionary.domain.TranslationResponseState
 import pan.alexander.dictionary.ui.base.BaseViewModel
 import pan.alexander.dictionary.utils.logger.AppLogger
-import javax.inject.Inject
 
-class TranslationViewModel @Inject constructor(
+class TranslationViewModel(
     private val interactor: TranslationInteractor
 ) : BaseViewModel<TranslationViewState>() {
 

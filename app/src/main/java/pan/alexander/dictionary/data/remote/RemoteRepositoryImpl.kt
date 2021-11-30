@@ -6,9 +6,8 @@ import pan.alexander.dictionary.domain.RemoteRepository
 import pan.alexander.dictionary.domain.entities.Translation
 import retrofit2.Retrofit
 import java.io.IOException
-import javax.inject.Inject
 
-class RemoteRepositoryImpl @Inject constructor(
+class RemoteRepositoryImpl(
     private val remoteDataSource: RemoteDataSource,
     private val retrofit: Retrofit
 ) : RemoteRepository {

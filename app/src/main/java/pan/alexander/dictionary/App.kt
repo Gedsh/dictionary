@@ -1,8 +1,11 @@
 package pan.alexander.dictionary
 
 import android.app.Application
-import pan.alexander.dictionary.di.ApplicationComponent
-import pan.alexander.dictionary.di.DaggerApplicationComponent
+import org.koin.android.ext.koin.androidContext
+import org.koin.android.ext.koin.androidLogger
+import org.koin.core.context.GlobalContext.startKoin
+import org.koin.core.logger.Level
+import pan.alexander.dictionary.di.AppModules
 
 class App : Application() {
 
@@ -17,18 +20,24 @@ class App : Application() {
         const val LOG_TAG = "dictionary"
     }
 
-    lateinit var daggerComponent: ApplicationComponent
-
     override fun onCreate() {
         super.onCreate()
 
-        initDaggerComponent()
+        initKoin()
     }
 
-    private fun initDaggerComponent() {
-        daggerComponent = DaggerApplicationComponent
-            .builder()
-            .application(this)
-            .build()
+    private fun initKoin() {
+        startKoin {
+            androidLogger(if (BuildConfig.DEBUG) Level.ERROR else Level.NONE)
+            androidContext(this@App)
+            modules(
+                AppModules.vmModule,
+                AppModules.interactorModule,
+                AppModules.repoModule,
+                AppModules.dataSourceModule,
+                AppModules.utilModule,
+                AppModules.retrofitModule
+            )
+        }
     }
 }
