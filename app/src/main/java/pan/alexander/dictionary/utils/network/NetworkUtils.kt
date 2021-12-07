@@ -22,6 +22,7 @@ class NetworkUtils(
                 capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)
                         || capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)
                         || capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET)
+                        || capabilities.hasTransport(NetworkCapabilities.TRANSPORT_VPN)
             } else {
                 false
             }
