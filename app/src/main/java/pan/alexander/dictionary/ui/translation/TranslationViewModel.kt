@@ -20,30 +20,11 @@ class TranslationViewModel(
         extraBufferCapacity = 0,
         onBufferOverflow = BufferOverflow.DROP_OLDEST
     ).apply {
-        flatMapLatest {
-            flow {
-
-                if (it.isBlank()) {
-                    return@flow
-                }
-
-                viewStateMutableLiveData.value = TranslationViewState.Loading()
-
-                runCatching {
-                    interactor.getTranslations(it)
-                }.onSuccess {
-                    when (it) {
-                        is TranslationResponseState.Success ->
-                            emit(TranslationViewState.Success(it.translations))
-                        is TranslationResponseState.NoConnection ->
-                            emit(TranslationViewState.NoConnection)
-                    }
-                }.onFailure {
-                    AppLogger.logE("Requesting translation failed", it)
-                    emit(TranslationViewState.Error(it))
-                }
-
-            }
+        filter {
+            it.isNotBlank()
+        }.flatMapLatest {
+            viewStateMutableLiveData.value = TranslationViewState.Loading()
+            handleTranslations(this)
         }.also {
             viewModelScope.launch {
                 it.collect {
@@ -52,6 +33,19 @@ class TranslationViewModel(
             }
         }
     }
+
+    private fun handleTranslations(flow: SharedFlow<String>) =
+        interactor.getTranslations(flow).map { response ->
+            when (response) {
+                is TranslationResponseState.Success ->
+                    TranslationViewState.Success(response.translations)
+                is TranslationResponseState.NoConnection ->
+                    TranslationViewState.NoConnection
+            }
+        }.catch { error ->
+            AppLogger.logE("Requesting translation failed", error)
+            emit(TranslationViewState.Error(error))
+        }
 
     fun getTranslations(word: String = request.replayCache.firstOrNull() ?: "") {
         request.tryEmit(word)
