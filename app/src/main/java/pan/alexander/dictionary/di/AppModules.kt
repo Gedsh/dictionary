@@ -1,5 +1,6 @@
 package pan.alexander.dictionary.di
 
+import androidx.room.Room
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -7,14 +8,18 @@ import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 import pan.alexander.dictionary.BuildConfig
+import pan.alexander.dictionary.data.local.LocalDataSource
+import pan.alexander.dictionary.data.local.LocalDataSourceImpl
+import pan.alexander.dictionary.data.local.LocalRepositoryImpl
 import pan.alexander.dictionary.data.network.NetworkRepositoryImpl
 import pan.alexander.dictionary.data.remote.RemoteDataSource
 import pan.alexander.dictionary.data.remote.RemoteDataSourceImpl
 import pan.alexander.dictionary.data.remote.RemoteRepositoryImpl
-import pan.alexander.dictionary.domain.NetworkRepository
-import pan.alexander.dictionary.domain.RemoteRepository
-import pan.alexander.dictionary.domain.TranslationInteractor
-import pan.alexander.dictionary.domain.TranslationInteractorImpl
+import pan.alexander.dictionary.database.AppDatabase
+import pan.alexander.dictionary.database.LongListTypeConverter
+import pan.alexander.dictionary.domain.*
+import pan.alexander.dictionary.domain.translation.TranslationInteractor
+import pan.alexander.dictionary.domain.translation.TranslationInteractorImpl
 import pan.alexander.dictionary.ui.translation.TranslationViewModel
 import pan.alexander.dictionary.utils.configuration.ConfigurationManager
 import pan.alexander.dictionary.utils.configuration.ConfigurationManagerImpl
@@ -40,13 +45,19 @@ object AppModules {
     val interactorModule = module {
         factory<TranslationInteractor> {
             TranslationInteractorImpl(
+                localRepository = get(),
                 remoteRepository = get(),
-                networkRepository = get()
+                networkRepository = get(),
+                dispatcherProvider = get()
             )
         }
     }
 
     val repoModule = module {
+
+        single<LocalRepository> {
+            LocalRepositoryImpl(localDataSource = get())
+        }
 
         single<RemoteRepository> {
             RemoteRepositoryImpl(
@@ -61,6 +72,15 @@ object AppModules {
     }
 
     val dataSourceModule = module {
+
+        factory<LocalDataSource> {
+            LocalDataSourceImpl(
+                searchResponseDao = get(),
+                translationDao = get(),
+                meaningDao = get()
+            )
+        }
+
         factory<RemoteDataSource> {
             RemoteDataSourceImpl(
                 skyEngApi = get(),
@@ -113,6 +133,31 @@ object AppModules {
                         addInterceptor(get<HttpLoggingInterceptor>())
                     }
                 }.build()
+        }
+    }
+
+    val roomModule = module {
+
+        single {
+            Room.databaseBuilder(
+                androidContext(),
+                AppDatabase::class.java,
+                get<ConfigurationManager>().getAppDbName()
+            ).addTypeConverter(LongListTypeConverter())
+                .fallbackToDestructiveMigration()
+                .build()
+        }
+
+        single {
+            get<AppDatabase>().searchResponseDao()
+        }
+
+        single {
+            get<AppDatabase>().translationDao()
+        }
+
+        single {
+            get<AppDatabase>().meaningDao()
         }
     }
 }

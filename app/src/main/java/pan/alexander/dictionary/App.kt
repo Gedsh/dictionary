@@ -31,7 +31,8 @@ class App : Application() {
                 AppModules.repoModule,
                 AppModules.dataSourceModule,
                 AppModules.utilModule,
-                AppModules.retrofitModule
+                AppModules.retrofitModule,
+                AppModules.roomModule
             )
         }
     }

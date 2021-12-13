@@ -5,8 +5,8 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
-import pan.alexander.dictionary.domain.TranslationInteractor
-import pan.alexander.dictionary.domain.TranslationResponseState
+import pan.alexander.dictionary.domain.translation.TranslationInteractor
+import pan.alexander.dictionary.domain.translation.TranslationResponseState
 import pan.alexander.dictionary.ui.base.BaseViewModel
 import pan.alexander.dictionary.utils.logger.AppLogger
 

@@ -6,15 +6,18 @@ buildscript {
         retrofit_version = "2.9.0"
         okhttp_version = '5.0.0-alpha.3'
         viewbinding_version = '1.5.3'
-        coroutines_version = '1.5.1'
+        coroutines_version = '1.5.2'
         lifecycle_viewmodel_ktx = '2.4.0'
+        room_version = "2.4.0-rc01"
+        room_ktx = "2.3.0"
+        coil_version = "1.4.0"
     }
     repositories {
         google()
         mavenCentral()
     }
     dependencies {
-        classpath "com.android.tools.build:gradle:7.0.3"
+        classpath 'com.android.tools.build:gradle:7.0.4'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.6.0"
 
         // NOTE: Do not place your application dependencies here; they belong

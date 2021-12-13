@@ -9,7 +9,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import pan.alexander.dictionary.R
 import pan.alexander.dictionary.databinding.TranslationFragmentBinding
-import pan.alexander.dictionary.domain.entities.Translation
+import pan.alexander.dictionary.domain.dto.TranslationDto
 import pan.alexander.dictionary.ui.base.BaseFragment
 import pan.alexander.dictionary.ui.translation.adapter.TranslationAdapter
 
@@ -22,15 +22,7 @@ class TranslationFragment : BaseFragment<TranslationViewState>(
 
     private val binding by viewBinding(TranslationFragmentBinding::bind)
 
-    private val onListItemClickListener: TranslationAdapter.OnListItemClickListener =
-        object : TranslationAdapter.OnListItemClickListener {
-            override fun onItemClick(data: Translation) {
-                Toast.makeText(this@TranslationFragment.context, data.text, Toast.LENGTH_SHORT)
-                    .show()
-            }
-        }
-
-    private val adapter: TranslationAdapter by lazy { TranslationAdapter(onListItemClickListener) }
+    private val adapter: TranslationAdapter by lazy { TranslationAdapter(::onItemClick) }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -68,6 +60,11 @@ class TranslationFragment : BaseFragment<TranslationViewState>(
         binding.reloadButton.setOnClickListener {
             translationViewModel.getTranslations()
         }
+    }
+
+    private fun onItemClick(data: TranslationDto) {
+        Toast.makeText(this@TranslationFragment.context, data.word, Toast.LENGTH_SHORT)
+            .show()
     }
 
     private fun observeViewStateChanges() {

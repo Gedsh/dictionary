@@ -7,16 +7,16 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import pan.alexander.dictionary.R
 import pan.alexander.dictionary.databinding.TranslationRecyclerItemBinding
-import pan.alexander.dictionary.domain.entities.Translation
+import pan.alexander.dictionary.domain.dto.TranslationDto
 
 class TranslationAdapter(
-    private var onListItemClickListener: OnListItemClickListener
+    private var onListItemClickListener: (listItemData: TranslationDto) -> Unit
 ) : RecyclerView.Adapter<TranslationAdapter.RecyclerItemViewHolder>() {
 
-    private val translations = mutableListOf<Translation>()
+    private val translations = mutableListOf<TranslationDto>()
 
     @SuppressLint("NotifyDataSetChanged")
-    fun setData(data: List<Translation>) {
+    fun setData(data: List<TranslationDto>) {
         translations.apply {
             clear()
             addAll(data)
@@ -41,10 +41,10 @@ class TranslationAdapter(
 
     inner class RecyclerItemViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
-        fun bind(translation: Translation) {
+        fun bind(translation: TranslationDto) {
             val binding = TranslationRecyclerItemBinding.bind(itemView)
             if (layoutPosition != RecyclerView.NO_POSITION) {
-                binding.headerTextviewTranslationItem.text = translation.text
+                binding.headerTextviewTranslationItem.text = translation.word
                 binding.descriptionTextviewTranslationItem.text =
                     translation.meanings.joinToString("\n") { it.translation }
                 itemView.setOnClickListener { openInNewWindow(translation) }
@@ -52,11 +52,7 @@ class TranslationAdapter(
         }
     }
 
-    private fun openInNewWindow(listItemData: Translation) {
-        onListItemClickListener.onItemClick(listItemData)
-    }
-
-    interface OnListItemClickListener {
-        fun onItemClick(data: Translation)
+    private fun openInNewWindow(listItemData: TranslationDto) {
+        onListItemClickListener(listItemData)
     }
 }
