@@ -46,7 +46,7 @@ class TranslationAdapter(
             if (layoutPosition != RecyclerView.NO_POSITION) {
                 binding.headerTextviewTranslationItem.text = translation.word
                 binding.descriptionTextviewTranslationItem.text =
-                    translation.meanings.joinToString("\n") { it.translation }
+                    translation.meanings.joinToString("\n") { "\u00B7 ${it.translation}" }
                 itemView.setOnClickListener { openInNewWindow(translation) }
             }
         }

@@ -80,7 +80,11 @@ class TranslationInteractorImpl(
     private suspend fun sortTranslations(word: String, translations: List<TranslationDto>) =
         withContext(dispatcherProvider.io()) {
             translations.sortedBy {
-                abs(it.word.length - word.length)
+                if (it.word.contains(word)) {
+                    abs(it.word.length - word.length)
+                } else {
+                    abs(it.meanings.firstOrNull()?.translation?.length ?: 0 - word.length)
+                }
             }
         }
 

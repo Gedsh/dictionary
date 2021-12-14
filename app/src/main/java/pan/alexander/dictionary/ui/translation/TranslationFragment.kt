@@ -2,7 +2,6 @@ package pan.alexander.dictionary.ui.translation
 
 import android.os.Bundle
 import android.view.View
-import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import by.kirich1409.viewbindingdelegate.viewBinding
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -11,6 +10,7 @@ import pan.alexander.dictionary.R
 import pan.alexander.dictionary.databinding.TranslationFragmentBinding
 import pan.alexander.dictionary.domain.dto.TranslationDto
 import pan.alexander.dictionary.ui.base.BaseFragment
+import pan.alexander.dictionary.ui.details.DetailsFragment
 import pan.alexander.dictionary.ui.translation.adapter.TranslationAdapter
 
 @ExperimentalCoroutinesApi
@@ -63,8 +63,10 @@ class TranslationFragment : BaseFragment<TranslationViewState>(
     }
 
     private fun onItemClick(data: TranslationDto) {
-        Toast.makeText(this@TranslationFragment.context, data.word, Toast.LENGTH_SHORT)
-            .show()
+        parentFragmentManager.beginTransaction()
+            .replace(R.id.container, DetailsFragment.newInstance(data))
+            .addToBackStack(null)
+            .commit()
     }
 
     private fun observeViewStateChanges() {
@@ -132,7 +134,7 @@ class TranslationFragment : BaseFragment<TranslationViewState>(
 
     companion object {
         private const val BOTTOM_SHEET_FRAGMENT_DIALOG_TAG =
-            "74a54328-5d62-46bf-ab6b-cbf5fgt0-092395"
+            "pan.alexander.dictionary.BOTTOM_SHEET_FRAGMENT_DIALOG_TAG"
 
         fun newInstance() = TranslationFragment()
     }

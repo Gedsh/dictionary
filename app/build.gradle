@@ -2,6 +2,7 @@ plugins {
     id 'com.android.application'
     id 'kotlin-android'
     id 'kotlin-kapt'
+    id 'kotlin-parcelize'
 }
 
 android {
@@ -46,6 +47,7 @@ dependencies {
     //AndroidX
     implementation 'androidx.core:core-ktx:1.7.0'
     implementation 'androidx.appcompat:appcompat:1.4.0'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.2'
 
     //Google material
@@ -58,6 +60,7 @@ dependencies {
     //Coroutines
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines_version"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_viewmodel_ktx"
+    implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle_viewmodel_ktx"
 
     //Retrofit + Okhttp + Gson
     implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
@@ -71,6 +74,7 @@ dependencies {
 
     //Image Loading
     implementation "io.coil-kt:coil:$coil_version"
+    implementation "io.coil-kt:coil-base:$coil_version"
 
     //ViewBinding
     implementation "com.github.kirich1409:viewbindingpropertydelegate-noreflection:$viewbinding_version"

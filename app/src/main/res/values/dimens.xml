@@ -24,4 +24,7 @@
 
     //Corner radius
     <dimen name="bottom_sheet_dialog_corner_radius">10dp</dimen>
+
+    //Translation details
+    <dimen name="details_recycler_item_image_size">80dp</dimen>
 </resources>

@@ -1,7 +1,12 @@
 package pan.alexander.dictionary.di
 
+import android.util.Log
 import androidx.room.Room
+import coil.ImageLoader
+import coil.util.CoilUtils
+import coil.util.DebugLogger
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import okhttp3.Dispatcher
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.android.ext.koin.androidContext
@@ -158,6 +163,27 @@ object AppModules {
 
         single {
             get<AppDatabase>().meaningDao()
+        }
+    }
+
+    val imageLoaderModule = module {
+        single {
+            ImageLoader.Builder(androidContext())
+                .availableMemoryPercentage(0.25)
+                .okHttpClient {
+                    // Don't limit concurrent network requests by host.
+                    val dispatcher = Dispatcher().apply { maxRequestsPerHost = maxRequests }
+
+                    OkHttpClient.Builder()
+                        .dispatcher(dispatcher)
+                        .cache(CoilUtils.createDefaultCache(androidContext()))
+                        .build()
+                }.apply {
+                    if (BuildConfig.DEBUG) {
+                        logger(DebugLogger(Log.VERBOSE))
+                    }
+                }
+                .build()
         }
     }
 }
