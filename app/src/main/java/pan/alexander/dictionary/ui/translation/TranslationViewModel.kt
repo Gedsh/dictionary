@@ -27,9 +27,9 @@ class TranslationViewModel(
             handleTranslations(this)
         }.also {
             viewModelScope.launch {
-                it.collect {
+                it.onEach {
                     viewStateMutableLiveData.value = it
-                }
+                }.collect()
             }
         }
     }
