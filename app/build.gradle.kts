@@ -1,6 +1,5 @@
 plugins {
     id("android-application-convention")
-    id("kotlin-kapt-convention")
     id("kotlin-parcelize-convention")
     //id("com.github.ben-manes.versions")
 }
@@ -11,17 +10,16 @@ android {
         applicationId = Config.application_id
         versionCode = Releases.version_code
         versionName = Releases.version_name
-
-        buildConfigField(
-            "String",
-            "API_BASE_URL",
-            "\"https://dictionary.skyeng.ru/api/public/v1/\""
-        )
     }
 
 }
 
 dependencies {
+
+    implementation(projects.coreDb)
+    implementation(projects.coreUtils)
+    implementation(projects.coreWeb)
+    implementation(projects.coreUi)
 
     //Kotlin
     implementation(Kotlin.core)

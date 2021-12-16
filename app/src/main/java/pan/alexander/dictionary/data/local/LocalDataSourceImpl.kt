@@ -1,11 +1,11 @@
 package pan.alexander.dictionary.data.local
 
-import pan.alexander.dictionary.database.MeaningDao
-import pan.alexander.dictionary.database.SearchResponseDao
-import pan.alexander.dictionary.database.TranslationDao
-import pan.alexander.dictionary.domain.entities.MeaningEntity
-import pan.alexander.dictionary.domain.entities.SearchResponseEntity
-import pan.alexander.dictionary.domain.entities.TranslationEntity
+import pan.alexander.core_db.enities.MeaningEntity
+import pan.alexander.core_db.enities.SearchResponseEntity
+import pan.alexander.core_db.enities.TranslationEntity
+import pan.alexander.core_db.database.MeaningDao
+import pan.alexander.core_db.database.SearchResponseDao
+import pan.alexander.core_db.database.TranslationDao
 
 class LocalDataSourceImpl(
     private val searchResponseDao: SearchResponseDao,

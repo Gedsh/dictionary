@@ -1,8 +1,8 @@
 package pan.alexander.dictionary.domain
 
-import pan.alexander.dictionary.domain.entities.MeaningEntity
-import pan.alexander.dictionary.domain.entities.SearchResponseEntity
-import pan.alexander.dictionary.domain.entities.TranslationEntity
+import pan.alexander.core_db.enities.MeaningEntity
+import pan.alexander.core_db.enities.SearchResponseEntity
+import pan.alexander.core_db.enities.TranslationEntity
 
 interface LocalRepository {
     suspend fun getSearchResponseIdsByWord(word: String): List<Long>

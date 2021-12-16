@@ -6,13 +6,13 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.retryWhen
 import kotlinx.coroutines.withContext
+import pan.alexander.core_db.enities.SearchResponseEntity
+import pan.alexander.core_db.enities.TranslationEntity
+import pan.alexander.core_utils.coroutines.DispatcherProvider
 import pan.alexander.dictionary.domain.LocalRepository
 import pan.alexander.dictionary.domain.NetworkRepository
 import pan.alexander.dictionary.domain.RemoteRepository
 import pan.alexander.dictionary.domain.dto.TranslationDto
-import pan.alexander.dictionary.domain.entities.SearchResponseEntity
-import pan.alexander.dictionary.domain.entities.TranslationEntity
-import pan.alexander.dictionary.utils.coroutines.DispatcherProvider
 import java.io.IOException
 import kotlin.math.abs
 

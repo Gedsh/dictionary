@@ -1,7 +1,7 @@
 package pan.alexander.dictionary.data.remote
 
-import pan.alexander.dictionary.data.remote.pojo.SearchResponsePojo
-import pan.alexander.dictionary.domain.entities.MeaningEntity
+import pan.alexander.core_db.enities.MeaningEntity
+import pan.alexander.core_web.pojo.SearchResponsePojo
 import pan.alexander.dictionary.domain.dto.TranslationDto
 
 object TranslationPojoToDtoMapper {

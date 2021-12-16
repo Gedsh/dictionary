@@ -6,10 +6,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import by.kirich1409.viewbindingdelegate.viewBinding
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import pan.alexander.core_ui.base.BaseFragment
 import pan.alexander.dictionary.R
 import pan.alexander.dictionary.databinding.TranslationFragmentBinding
 import pan.alexander.dictionary.domain.dto.TranslationDto
-import pan.alexander.dictionary.ui.base.BaseFragment
 import pan.alexander.dictionary.ui.details.DetailsFragment
 import pan.alexander.dictionary.ui.translation.adapter.TranslationAdapter
 

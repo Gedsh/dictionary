@@ -10,12 +10,12 @@ import by.kirich1409.viewbindingdelegate.viewBinding
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.get
 import org.koin.android.ext.android.inject
+import pan.alexander.core_utils.coroutines.DispatcherProvider
+import pan.alexander.core_utils.logger.AppLogger
 import pan.alexander.dictionary.R
 import pan.alexander.dictionary.databinding.DetailsFragmentBinding
 import pan.alexander.dictionary.domain.dto.TranslationDto
 import pan.alexander.dictionary.ui.details.adapter.DetailsAdapter
-import pan.alexander.dictionary.utils.coroutines.DispatcherProvider
-import pan.alexander.dictionary.utils.logger.AppLogger
 import java.lang.Exception
 
 private const val TRANSLATION_EXTRA = "pan.alexander.dictionary.TRANSLATION_EXTRA"

@@ -1,6 +1,6 @@
 package pan.alexander.dictionary.data.remote
 
-import pan.alexander.dictionary.data.remote.pojo.ErrorResponsePojo
+import pan.alexander.core_web.pojo.ErrorResponsePojo
 import pan.alexander.dictionary.domain.RemoteRepository
 import pan.alexander.dictionary.domain.dto.TranslationDto
 import retrofit2.Retrofit

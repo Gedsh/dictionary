@@ -18,10 +18,6 @@ import pan.alexander.dictionary.di.AppModules.vmModule
 @ExperimentalCoroutinesApi
 class App : Application() {
 
-    companion object {
-        const val LOG_TAG = "dictionary"
-    }
-
     override fun onCreate() {
         super.onCreate()
 

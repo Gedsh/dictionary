@@ -1,4 +1,6 @@
+import com.android.build.api.dsl.ApplicationExtension
 import com.android.build.gradle.BaseExtension
+import com.android.build.gradle.LibraryExtension
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.get
@@ -10,6 +12,7 @@ val keystoreProperties = Properties().apply {
     load(FileInputStream(File("../../.local/KStore/keystore.properties")))
 }
 
+@Suppress("UnstableApiUsage")
 open class BaseAndroidPlugin : Plugin<Project> {
 
     override fun apply(project: Project) {
@@ -37,25 +40,47 @@ open class BaseAndroidPlugin : Plugin<Project> {
             testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         }
 
-        buildTypes {
-            getByName("release") {
-                isMinifyEnabled = true
-                isShrinkResources = true
-                proguardFiles(
-                    getDefaultProguardFile("proguard-android-optimize.txt"),
-                    "proguard-rules.pro"
-                )
-                signingConfig = signingConfigs.getByName("release")
-            }
+        if (this is ApplicationExtension) {
+            buildTypes {
+                getByName("release") {
+                    isMinifyEnabled = true
+                    isShrinkResources = true
+                    proguardFiles(
+                        getDefaultProguardFile("proguard-android-optimize.txt"),
+                        "proguard-rules.pro"
+                    )
+                    signingConfig = signingConfigs.getByName("release")
+                }
 
-            getByName("debug") {
-                isMinifyEnabled = false
-                isShrinkResources = false
-                proguardFiles(
-                    getDefaultProguardFile("proguard-android.txt"),
-                    "proguard-rules.pro"
-                )
-                signingConfig = signingConfigs.getByName("release")
+                getByName("debug") {
+                    isMinifyEnabled = false
+                    isShrinkResources = false
+                    proguardFiles(
+                        getDefaultProguardFile("proguard-android.txt"),
+                        "proguard-rules.pro"
+                    )
+                    signingConfig = signingConfigs.getByName("release")
+                }
+            }
+        } else if (this is LibraryExtension) {
+            buildTypes {
+                getByName("release") {
+                    isMinifyEnabled = true
+                    proguardFiles(
+                        getDefaultProguardFile("proguard-android-optimize.txt"),
+                        "proguard-rules.pro"
+                    )
+                    signingConfig = signingConfigs.getByName("release")
+                }
+
+                getByName("debug") {
+                    isMinifyEnabled = false
+                    proguardFiles(
+                        getDefaultProguardFile("proguard-android.txt"),
+                        "proguard-rules.pro"
+                    )
+                    signingConfig = signingConfigs.getByName("release")
+                }
             }
         }
 
@@ -67,6 +92,6 @@ open class BaseAndroidPlugin : Plugin<Project> {
         }
     }
 
-    fun Project.android(action: BaseExtension.() -> Unit) =
+    private fun Project.android(action: BaseExtension.() -> Unit) =
         (extensions["android"] as BaseExtension).run(action)
 }
