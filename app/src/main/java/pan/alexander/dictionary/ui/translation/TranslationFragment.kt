@@ -1,14 +1,13 @@
 package pan.alexander.dictionary.ui.translation
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import by.kirich1409.viewbindingdelegate.viewBinding
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import pan.alexander.core_ui.base.BaseFragment
-import pan.alexander.core_utils.Constants.LOG_TAG
+import pan.alexander.core_ui.delegates.replace
 import pan.alexander.dictionary.R
 import pan.alexander.dictionary.databinding.TranslationFragmentBinding
 import pan.alexander.dictionary.domain.dto.TranslationDto
@@ -30,7 +29,6 @@ class TranslationFragment : BaseFragment<TranslationViewState>(
         object : SearchDialogFragment.OnSearchClickListener {
             override fun onClick(searchWord: String) {
                 uiViewModel.getTranslations(searchWord)
-                Log.e(LOG_TAG, "onClick($searchWord)")
             }
         }
     }
@@ -107,10 +105,8 @@ class TranslationFragment : BaseFragment<TranslationViewState>(
     }
 
     private fun onItemClick(data: TranslationDto) {
-        parentFragmentManager.beginTransaction()
-            .replace(R.id.container, DetailsFragment.newInstance(data))
-            .addToBackStack(null)
-            .commit()
+        val transaction by replace(DetailsFragment.newInstance(data))
+        transaction.commit()
     }
 
     private fun observeViewStateChanges() {

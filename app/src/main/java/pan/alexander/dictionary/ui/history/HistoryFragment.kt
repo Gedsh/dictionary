@@ -11,6 +11,7 @@ import by.kirich1409.viewbindingdelegate.viewBinding
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import pan.alexander.core_ui.base.BaseFragment
+import pan.alexander.core_ui.delegates.replace
 import pan.alexander.dictionary.R
 import pan.alexander.dictionary.databinding.HistoryFragmentBinding
 import pan.alexander.dictionary.ui.history.adapter.HistoryAdapter
@@ -87,10 +88,8 @@ class HistoryFragment : BaseFragment<List<String>>(
         adapter.setWords(viewState)
 
     private fun showTranslationsScreen(fragment: TranslationFragment) {
-        parentFragmentManager.beginTransaction()
-            .replace(R.id.container, fragment)
-            .addToBackStack(null)
-            .commit()
+        val transaction by replace(fragment)
+        transaction.commit()
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {

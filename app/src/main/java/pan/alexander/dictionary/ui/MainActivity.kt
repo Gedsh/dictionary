@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.MenuItem
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.koin.android.ext.android.getKoin
+import pan.alexander.core_ui.delegates.replace
 import pan.alexander.dictionary.R
 import pan.alexander.dictionary.di.ACTIVITY_RETAINED_SCOPE
 import pan.alexander.dictionary.ui.history.HistoryFragment
@@ -22,9 +23,8 @@ class MainActivity : AppCompatActivity() {
         initBackStackChangedListener()
 
         if (savedInstanceState == null) {
-            supportFragmentManager.beginTransaction()
-                .replace(R.id.container, HistoryFragment.newInstance())
-                .commitNow()
+            val transaction by replace(HistoryFragment.newInstance())
+            transaction.commitNow()
         }
     }
 
