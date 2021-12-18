@@ -31,11 +31,15 @@ class TranslationInteractorImpl(
             val translationsFromDb = getTranslationsFromDb(it)
             when {
                 translationsFromDb.isNotEmpty() -> {
+                    localRepository.addWordToHistory(it)
                     TranslationResponseState.Success(sortTranslations(it, translationsFromDb))
                 }
                 networkRepository.isConnectionAvailable() -> {
                     val translationsFromApi = remoteRepository.requestTranslations(it)
                     saveTranslationsToDb(it, translationsFromApi)
+                    if (translationsFromApi.isNotEmpty()) {
+                        localRepository.addWordToHistory(it)
+                    }
                     TranslationResponseState.Success(sortTranslations(it, translationsFromApi))
                 }
                 else -> {

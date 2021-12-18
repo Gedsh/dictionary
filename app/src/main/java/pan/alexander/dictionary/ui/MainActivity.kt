@@ -5,7 +5,7 @@ import android.os.Bundle
 import android.view.MenuItem
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import pan.alexander.dictionary.R
-import pan.alexander.dictionary.ui.translation.TranslationFragment
+import pan.alexander.dictionary.ui.history.HistoryFragment
 
 @ExperimentalCoroutinesApi
 class MainActivity : AppCompatActivity() {
@@ -21,7 +21,7 @@ class MainActivity : AppCompatActivity() {
 
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction()
-                .replace(R.id.container, TranslationFragment.newInstance())
+                .replace(R.id.container, HistoryFragment.newInstance())
                 .commitNow()
         }
     }

@@ -13,4 +13,9 @@ interface LocalRepository {
 
     suspend fun getMeaningByIds(ids: List<Long>): List<MeaningEntity>
     suspend fun addMeanings(entities: List<MeaningEntity>)
+
+    suspend fun getHistory(): List<String>
+    suspend fun addWordToHistory(word: String)
+    suspend fun deleteWordFromHistory(word: String)
+    suspend fun clearHistory()
 }

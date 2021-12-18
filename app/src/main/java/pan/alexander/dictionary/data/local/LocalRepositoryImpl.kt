@@ -31,4 +31,16 @@ class LocalRepositoryImpl(
     override suspend fun addMeanings(entities: List<MeaningEntity>) =
         localDataSource.addMeanings(entities)
 
+    override suspend fun getHistory(): List<String> =
+        localDataSource.getHistory()
+
+    override suspend fun addWordToHistory(word: String) =
+        localDataSource.addWordToHistory(word)
+
+    override suspend fun deleteWordFromHistory(word: String) =
+        localDataSource.deleteWordFromHistory(word)
+
+    override suspend fun clearHistory() =
+        localDataSource.clearHistory()
+
 }

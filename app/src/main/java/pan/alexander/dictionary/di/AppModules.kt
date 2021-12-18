@@ -31,6 +31,9 @@ import pan.alexander.dictionary.domain.*
 import pan.alexander.dictionary.domain.translation.TranslationInteractor
 import pan.alexander.dictionary.domain.translation.TranslationInteractorImpl
 import pan.alexander.core_web.web.SkyEngApi
+import pan.alexander.dictionary.domain.history.HistoryInteractor
+import pan.alexander.dictionary.domain.history.HistoryInteractorImpl
+import pan.alexander.dictionary.ui.history.HistoryViewModel
 import pan.alexander.dictionary.ui.translation.TranslationViewModel
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -45,6 +48,9 @@ object AppModules {
         viewModel {
             TranslationViewModel(interactor = get())
         }
+        viewModel {
+            HistoryViewModel(interactor = get())
+        }
     }
 
     val interactorModule = module {
@@ -54,6 +60,11 @@ object AppModules {
                 remoteRepository = get(),
                 networkRepository = get(),
                 dispatcherProvider = get()
+            )
+        }
+        factory<HistoryInteractor> {
+            HistoryInteractorImpl(
+                localRepository = get()
             )
         }
     }
@@ -82,7 +93,8 @@ object AppModules {
             LocalDataSourceImpl(
                 searchResponseDao = get(),
                 translationDao = get(),
-                meaningDao = get()
+                meaningDao = get(),
+                historyDao = get()
             )
         }
 
@@ -115,7 +127,7 @@ object AppModules {
             get<Retrofit>().create(SkyEngApi::class.java)
         }
 
-        single<Retrofit> {
+        single {
             Retrofit.Builder()
                 .baseUrl(get<ConfigurationManager>().getBaseUrl())
                 .addConverterFactory(get<GsonConverterFactory>())
@@ -123,7 +135,7 @@ object AppModules {
                 .build()
         }
 
-        single<GsonConverterFactory> {
+        single {
             GsonConverterFactory.create()
         }
 
@@ -163,6 +175,10 @@ object AppModules {
 
         single {
             get<AppDatabase>().meaningDao()
+        }
+
+        single {
+            get<AppDatabase>().historyDao()
         }
     }
 

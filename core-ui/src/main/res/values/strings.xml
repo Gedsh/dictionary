@@ -5,7 +5,12 @@
     <string name="undefined_error">Undefined error</string>
     <string name="empty_server_response_on_success">Couldn\'t find any definitions</string>
     <string name="button_search">Search</string>
-    <string name="search_hint">New word</string>
+    <string name="search_hint">Enter word</string>
     <string name="delete_description">X</string>
     <string name="device_is_offline">No internet connection</string>
+    <string name="details">Details</string>
+    <string name="translations">Translations</string>
+    <string name="history">History</string>
+    <string name="clear_history">Clear history</string>
+    <string name="clear">Clear</string>
 </resources>
