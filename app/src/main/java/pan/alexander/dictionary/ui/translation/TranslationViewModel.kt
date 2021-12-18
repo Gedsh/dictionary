@@ -9,6 +9,7 @@ import pan.alexander.core_utils.logger.AppLogger
 import pan.alexander.dictionary.domain.translation.TranslationInteractor
 import pan.alexander.dictionary.domain.translation.TranslationResponseState
 import pan.alexander.core_ui.base.BaseViewModel
+import pan.alexander.core_utils.Constants.WORD_REGEX
 
 @ExperimentalCoroutinesApi
 class TranslationViewModel(
@@ -21,7 +22,7 @@ class TranslationViewModel(
         onBufferOverflow = BufferOverflow.DROP_OLDEST
     ).apply {
         filter {
-            it.isNotBlank()
+            it.matches(WORD_REGEX)
         }.flatMapLatest {
             viewStateMutableLiveData.value = TranslationViewState.Loading()
             handleTranslations(this)
@@ -47,8 +48,10 @@ class TranslationViewModel(
             emit(TranslationViewState.Error(error))
         }
 
-    fun getTranslations(word: String = request.replayCache.firstOrNull() ?: "") {
+    fun getTranslations(word: String = getLastWord()) {
         request.tryEmit(word)
     }
+
+    fun getLastWord() = request.replayCache.firstOrNull() ?: ""
 
 }

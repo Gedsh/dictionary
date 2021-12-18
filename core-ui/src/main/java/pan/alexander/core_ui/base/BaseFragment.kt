@@ -7,7 +7,7 @@ abstract class BaseFragment<T>(
     @LayoutRes layout: Int
 ) : Fragment(layout) {
 
-    abstract val translationViewModel: BaseViewModel<T>
+    abstract val uiViewModel: BaseViewModel<T>
 
     abstract fun setState(viewState: T)
 

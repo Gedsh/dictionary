@@ -28,31 +28,36 @@ class TranslationAdapter(
         return RecyclerItemViewHolder(
             LayoutInflater.from(parent.context)
                 .inflate(R.layout.translation_recycler_item, parent, false)
-        )
+        ).apply {
+            itemView.setOnClickListener(this)
+        }
     }
 
     override fun onBindViewHolder(holder: RecyclerItemViewHolder, position: Int) {
-        holder.bind(translations[position])
+        if (position != RecyclerView.NO_POSITION) {
+            holder.bind(translations[position])
+        }
     }
 
     override fun getItemCount(): Int {
         return translations.size
     }
 
-    inner class RecyclerItemViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+    inner class RecyclerItemViewHolder(view: View) : RecyclerView.ViewHolder(view),
+        View.OnClickListener {
 
         fun bind(translation: TranslationDto) {
             val binding = TranslationRecyclerItemBinding.bind(itemView)
-            if (layoutPosition != RecyclerView.NO_POSITION) {
-                binding.headerTextviewTranslationItem.text = translation.word
-                binding.descriptionTextviewTranslationItem.text =
-                    translation.meanings.joinToString("\n") { "\u00B7 ${it.translation}" }
-                itemView.setOnClickListener { openInNewWindow(translation) }
+            binding.headerTextviewTranslationItem.text = translation.word
+            binding.descriptionTextviewTranslationItem.text =
+                translation.meanings.joinToString("\n") { "\u00B7 ${it.translation}" }
+        }
+
+        override fun onClick(v: View?) {
+            val position = bindingAdapterPosition
+            if (position != RecyclerView.NO_POSITION) {
+                onListItemClickListener(translations[position])
             }
         }
-    }
-
-    private fun openInNewWindow(listItemData: TranslationDto) {
-        onListItemClickListener(listItemData)
     }
 }

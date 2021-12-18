@@ -11,6 +11,8 @@
     <color name="color_delete_text_icon">#66000014</color>
     <color name="color_text_header">#313131</color>
     <color name="color_black">#313131</color>
+    <color name="color_black_10">#1A313131</color>
     <color name="color_white">#FFFFFF</color>
     <color name="color_gray">#66000000</color>
+    <color name="color_purple_10">#1ABB86FC</color>
 </resources>

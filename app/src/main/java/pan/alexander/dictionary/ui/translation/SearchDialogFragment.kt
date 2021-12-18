@@ -4,8 +4,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
+import android.widget.TextView
 import androidx.core.widget.addTextChangedListener
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import pan.alexander.core_utils.Constants.WORD_REGEX
 import pan.alexander.dictionary.databinding.SearchDialogFragmentBinding
 
 class SearchDialogFragment : BottomSheetDialogFragment() {
@@ -13,12 +16,6 @@ class SearchDialogFragment : BottomSheetDialogFragment() {
     private var _binding: SearchDialogFragmentBinding? = null
     private val binding get() = _binding!!
     private var onSearchClickListener: OnSearchClickListener? = null
-
-    private val onSearchButtonClickListener =
-        View.OnClickListener {
-            onSearchClickListener?.onClick(binding.searchEditText.text.toString())
-            dismiss()
-        }
 
     fun setOnSearchClickListener(listener: OnSearchClickListener) {
         onSearchClickListener = listener
@@ -35,29 +32,57 @@ class SearchDialogFragment : BottomSheetDialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.searchButtonTextview.setOnClickListener(onSearchButtonClickListener)
-        binding.searchEditText.addTextChangedListener {
-            if (it != null && it.toString().isNotEmpty()) {
-                binding.searchButtonTextview.isEnabled = true
-                binding.clearTextImageview.visibility = View.VISIBLE
+        setWordIfAvailable()
+        initOnSearchClickListener()
+        initOnSearchActionListener()
+        initOnTextChangedListener()
+        initOnClearClickListener()
+    }
+
+    private fun setWordIfAvailable() {
+        arguments?.getString(WORD_EXTRA)?.let {
+            binding.searchEditText.setText(it, TextView.BufferType.EDITABLE)
+        }
+    }
+
+    private fun initOnSearchClickListener() {
+        binding.searchButtonTextview.setOnClickListener {
+            searchWord()
+        }
+    }
+
+    private fun initOnSearchActionListener() {
+        binding.searchEditText.setOnEditorActionListener { _, actionId, _ ->
+            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                searchWord()
+                true
             } else {
-                binding.searchButtonTextview.isEnabled = false
-                binding.clearTextImageview.visibility = View.GONE
+                false
             }
         }
-        addOnClearClickListener()
+    }
+
+    private fun searchWord() {
+        onSearchClickListener?.onClick(binding.searchEditText.text.toString())
+        dismiss()
+    }
+
+    private fun initOnTextChangedListener() {
+        binding.searchEditText.addTextChangedListener {
+            binding.searchButtonTextview.isEnabled = it != null && it.toString().matches(WORD_REGEX)
+        }
+    }
+
+    private fun initOnClearClickListener() {
+        binding.clearButtonTextview.setOnClickListener {
+            binding.searchEditText.setText("")
+            binding.searchButtonTextview.isEnabled = false
+        }
     }
 
     override fun onDestroyView() {
         onSearchClickListener = null
         super.onDestroyView()
-    }
-
-    private fun addOnClearClickListener() {
-        binding.clearTextImageview.setOnClickListener {
-            binding.searchEditText.setText("")
-            binding.searchButtonTextview.isEnabled = false
-        }
     }
 
     interface OnSearchClickListener {
@@ -66,8 +91,14 @@ class SearchDialogFragment : BottomSheetDialogFragment() {
     }
 
     companion object {
-        fun newInstance(): SearchDialogFragment {
-            return SearchDialogFragment()
+        private const val WORD_EXTRA = "pan.alexander.dictionary.WORD_EXTRA"
+
+        fun newInstance(word: String?): SearchDialogFragment {
+            return SearchDialogFragment().also {
+                it.arguments = Bundle().apply {
+                    putString(WORD_EXTRA, word)
+                }
+            }
         }
     }
 }

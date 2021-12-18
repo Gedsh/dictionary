@@ -44,6 +44,13 @@ object ViewBinding {
         "com.github.kirich1409:viewbindingpropertydelegate-noreflection:${Versions.binding}"
 }
 
+object RecycleView {
+    const val adapter_delegates =
+        "com.hannesdorfmann:adapterdelegates4-kotlin-dsl:${Versions.adapter_delegates}"
+    const val adapter_delegates_viewbinding =
+        "com.hannesdorfmann:adapterdelegates4-kotlin-dsl-viewbinding:${Versions.adapter_delegates}"
+}
+
 object TestImpl {
     const val junit = "junit:junit:${Versions.junit}"
     const val ext = "androidx.test.ext:junit:${Versions.ext_junit}"

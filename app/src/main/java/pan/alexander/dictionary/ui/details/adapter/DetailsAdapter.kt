@@ -1,89 +1,105 @@
 package pan.alexander.dictionary.ui.details.adapter
 
-import android.annotation.SuppressLint
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.ImageView
-import androidx.recyclerview.widget.RecyclerView
 import coil.ImageLoader
 import coil.request.ImageRequest
 import coil.transform.CircleCropTransformation
+import com.hannesdorfmann.adapterdelegates4.dsl.adapterDelegateViewBinding
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import pan.alexander.dictionary.R
+import pan.alexander.dictionary.databinding.DetailsHeaderRecyclerItemBinding
 import pan.alexander.dictionary.databinding.DetailsRecyclerItemBinding
-import pan.alexander.dictionary.domain.dto.TranslationDto
+import pan.alexander.dictionary.databinding.DetailsTranscriptionRecyclerItemBinding
 
-class DetailsAdapter(
-    private val coroutineScope: CoroutineScope,
-    private val imageLoader: ImageLoader
-) : RecyclerView.Adapter<DetailsAdapter.RecyclerItemViewHolder>() {
+internal sealed class DetailsAdapterRecyclerItem
 
-    private val translationDetails = mutableListOf<TranslationDetailItem>()
+internal data class DetailsAdapterHeaderItem(
+    val word: String
+) : DetailsAdapterRecyclerItem()
 
-    @SuppressLint("NotifyDataSetChanged")
-    fun setData(translationDto: TranslationDto) {
-        translationDetails.apply {
-            clear()
-            addAll(
-                translationDto.meanings.map {
-                    TranslationDetailItem(it.id, it.translation, it.imgUrl)
-                }
-            )
+internal data class DetailsAdapterTranscriptionItem(
+    val transcription: String,
+    val loading: Boolean
+) : DetailsAdapterRecyclerItem()
+
+internal data class DetailsAdapterDetailsItem(
+    val translation: String,
+    val imgUrl: String
+) : DetailsAdapterRecyclerItem()
+
+internal fun detailsAdapterHeaderDelegate() =
+    adapterDelegateViewBinding<DetailsAdapterHeaderItem, DetailsAdapterRecyclerItem, DetailsHeaderRecyclerItemBinding>(
+        { inflater, root ->
+            DetailsHeaderRecyclerItemBinding.inflate(inflater, root, false)
         }
-        notifyDataSetChanged()
+    ) {
+        bind {
+            binding.detailsScreenWordTextview.text = item.word
+        }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerItemViewHolder =
-        RecyclerItemViewHolder(
-            LayoutInflater.from(parent.context)
-                .inflate(R.layout.details_recycler_item, parent, false)
-        )
-
-    override fun onBindViewHolder(holder: RecyclerItemViewHolder, position: Int) {
-        coroutineScope.launch { holder.bind(translationDetails[position]) }
-    }
-
-    override fun getItemCount(): Int = translationDetails.size
-
-    override fun getItemId(position: Int): Long = translationDetails[position].id
-
-    inner class RecyclerItemViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        suspend fun bind(translation: TranslationDetailItem) {
-            val binding = DetailsRecyclerItemBinding.bind(itemView)
-            if (layoutPosition != RecyclerView.NO_POSITION) {
-                binding.detailsRecyclerTranslationTextview.text = translation.translation
-
-                loadImage(binding, translation.imageUrl)
+internal fun detailsAdapterTranscriptionDelegate(onClickListener: () -> Unit) =
+    adapterDelegateViewBinding<DetailsAdapterTranscriptionItem, DetailsAdapterRecyclerItem, DetailsTranscriptionRecyclerItemBinding>(
+        { inflater, root ->
+            DetailsTranscriptionRecyclerItemBinding.inflate(inflater, root, false)
+        }
+    ) {
+        binding.descriptionScreenTranscriptionButton.setOnClickListener {
+            onClickListener()
+        }
+        bind {
+            binding.descriptionScreenTranscriptionButton.text = item.transcription
+            if (item.loading) {
+                binding.descriptionScreenLoadingProgress.visibility = View.VISIBLE
+            } else {
+                binding.descriptionScreenLoadingProgress.visibility = View.GONE
             }
         }
+    }
 
-        private suspend fun loadImage(binding: DetailsRecyclerItemBinding, imageUrl: String) {
-            val request = ImageRequest.Builder(binding.root.context)
-                .data("https:$imageUrl")
-                .target(
-                    onStart = {
-                        binding.detailsRecyclerWordImageview.scaleType = ImageView.ScaleType.CENTER
-                        binding.detailsRecyclerWordImageview.setImageResource(R.drawable.ic_loading_vector)
-                    },
-                    onSuccess = {
-                        binding.detailsRecyclerWordImageview.scaleType =
-                            ImageView.ScaleType.FIT_CENTER
-                        binding.detailsRecyclerWordImageview.setImageDrawable(it)
-                    },
-                    onError = {
-                        binding.detailsRecyclerWordImageview.scaleType = ImageView.ScaleType.CENTER
-                        binding.detailsRecyclerWordImageview.setImageResource(R.drawable.ic_load_error_vector)
-                    }
-                )
-                .transformations(
-                    CircleCropTransformation(),
-                )
-                .build()
-
-            imageLoader.execute(request)
+internal fun detailsAdapterDetailsDelegate(
+    imageLoader: ImageLoader,
+    coroutineScope: CoroutineScope
+) =
+    adapterDelegateViewBinding<DetailsAdapterDetailsItem, DetailsAdapterRecyclerItem, DetailsRecyclerItemBinding>(
+        { inflater, root ->
+            DetailsRecyclerItemBinding.inflate(inflater, root, false)
+        }
+    ) {
+        bind {
+            binding.detailsRecyclerTranslationTextview.text = item.translation
+            coroutineScope.launch { loadImage(imageLoader, binding, item.imgUrl) }
         }
     }
 
+private suspend fun loadImage(
+    imageLoader: ImageLoader,
+    binding: DetailsRecyclerItemBinding,
+    imageUrl: String
+) {
+    val request = ImageRequest.Builder(binding.root.context)
+        .data("https:$imageUrl")
+        .target(
+            onStart = {
+                binding.detailsRecyclerWordImageview.scaleType = ImageView.ScaleType.CENTER
+                binding.detailsRecyclerWordImageview.setImageResource(R.drawable.ic_loading_vector)
+            },
+            onSuccess = {
+                binding.detailsRecyclerWordImageview.scaleType =
+                    ImageView.ScaleType.FIT_CENTER
+                binding.detailsRecyclerWordImageview.setImageDrawable(it)
+            },
+            onError = {
+                binding.detailsRecyclerWordImageview.scaleType = ImageView.ScaleType.CENTER
+                binding.detailsRecyclerWordImageview.setImageResource(R.drawable.ic_load_error_vector)
+            }
+        )
+        .transformations(
+            CircleCropTransformation(),
+        )
+        .build()
+
+    imageLoader.execute(request)
 }

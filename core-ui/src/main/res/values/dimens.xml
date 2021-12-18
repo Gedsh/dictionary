@@ -27,4 +27,5 @@
 
     //Translation details
     <dimen name="details_recycler_item_image_size">80dp</dimen>
+    <dimen name="details_recycler_item_loading_progress_size">24dp</dimen>
 </resources>

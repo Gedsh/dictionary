@@ -6,7 +6,9 @@ import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.View
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.SimpleItemAnimator
 import by.kirich1409.viewbindingdelegate.viewBinding
+import com.hannesdorfmann.adapterdelegates4.AsyncListDifferDelegationAdapter
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.get
 import org.koin.android.ext.android.inject
@@ -15,7 +17,7 @@ import pan.alexander.core_utils.logger.AppLogger
 import pan.alexander.dictionary.R
 import pan.alexander.dictionary.databinding.DetailsFragmentBinding
 import pan.alexander.dictionary.domain.dto.TranslationDto
-import pan.alexander.dictionary.ui.details.adapter.DetailsAdapter
+import pan.alexander.dictionary.ui.details.adapter.*
 import java.lang.Exception
 
 private const val TRANSLATION_EXTRA = "pan.alexander.dictionary.TRANSLATION_EXTRA"
@@ -25,7 +27,7 @@ class DetailsFragment : Fragment(R.layout.details_fragment) {
     private val binding by viewBinding(DetailsFragmentBinding::bind)
     private var translation: TranslationDto? = null
 
-    private val adapter by lazy { DetailsAdapter(lifecycleScope, get()) }
+    private var adapter: AsyncListDifferDelegationAdapter<DetailsAdapterRecyclerItem>? = null
     private val mediaPlayer by lazy { MediaPlayer() }
     private val dispatcherProvider: DispatcherProvider by inject()
 
@@ -40,36 +42,61 @@ class DetailsFragment : Fragment(R.layout.details_fragment) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        setTitle()
+
         initRecycler()
 
-        initOnTranscriptionButtonClickListener()
+        setData(false)
+    }
 
-        setData()
+    private fun setTitle() {
+        activity?.setTitle(R.string.details)
     }
 
     private fun initRecycler() {
-        binding.descriptionScreenRecycler.adapter = adapter.apply {
-            setHasStableIds(true)
+        (binding.descriptionScreenRecycler.itemAnimator as SimpleItemAnimator)
+            .supportsChangeAnimations = false
+        binding.descriptionScreenRecycler.adapter = AsyncListDifferDelegationAdapter(
+            DetailsAdapterRecyclerItemDiffCallback(),
+            detailsAdapterHeaderDelegate(),
+            detailsAdapterTranscriptionDelegate(::transcriptionButtonClicked),
+            detailsAdapterDetailsDelegate(get(), lifecycleScope)
+        ).also {
+            adapter = it
         }
     }
 
-    private fun setData() {
+    private fun setData(showProgress: Boolean) {
         translation?.let { translation ->
-            binding.descriptionScreenWordTextview.text = translation.word
-            binding.descriptionScreenTranscriptionButton.text =
-                translation.meanings.firstOrNull()?.transcription ?: ""
-            adapter.setData(translation)
+
+            val detailItems = mutableListOf<DetailsAdapterRecyclerItem>().apply {
+                add(DetailsAdapterHeaderItem(translation.word))
+                add(
+                    DetailsAdapterTranscriptionItem(
+                        translation.meanings.firstOrNull()?.transcription ?: "", showProgress
+                    )
+                )
+                addAll(translation.meanings.map {
+                    DetailsAdapterDetailsItem(
+                        it.translation,
+                        it.imgUrl
+                    )
+                })
+            }
+
+            adapter?.setItems(detailItems)
         }
     }
 
-    private fun initOnTranscriptionButtonClickListener() {
-        binding.descriptionScreenTranscriptionButton.setOnClickListener {
-            lifecycleScope.launch(dispatcherProvider.io()) {
-                try {
-                    trySetupPlayer()
-                } catch (e: Exception) {
-                    AppLogger.logE("Play word failure", e)
-                }
+    private fun transcriptionButtonClicked() {
+        lifecycleScope.launch(dispatcherProvider.io()) {
+            try {
+                setData(true)
+                trySetupPlayer()
+            } catch (e: Exception) {
+                AppLogger.logE("Play word failure", e)
+            } finally {
+                setData(false)
             }
         }
     }

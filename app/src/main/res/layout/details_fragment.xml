@@ -1,51 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/description_screen_layout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:fillViewport="true"
-    android:paddingStart="@dimen/margin_xx_small"
-    android:paddingLeft="@dimen/margin_xx_small"
-    android:paddingEnd="@dimen/margin_xx_small"
-    android:paddingRight="@dimen/margin_xx_small">
+    android:layout_height="match_parent">
 
-    <LinearLayout
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/description_screen_recycler"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_medium"
-        android:fitsSystemWindows="true"
-        android:orientation="vertical">
+        android:layout_height="match_parent"
+        android:clipToPadding="false"
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/margin_small"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/description_screen_word_textview"
-            style="@style/HeaderTextStyle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textAlignment="center"
-            tools:text="Cat" />
-
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/description_screen_transcription_button"
-            style="@style/BaseFlatButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:drawableEnd="@drawable/ic_play_vector"
-            android:drawablePadding="@dimen/margin_small"
-            android:textSize="@dimen/text_size_standard"
-            tools:text="Cat" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/description_screen_recycler"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:clipToPadding="false"
-            android:orientation="vertical"
-            android:paddingBottom="@dimen/margin_small"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
-
-    </LinearLayout>
-
-</androidx.core.widget.NestedScrollView>
+</FrameLayout>

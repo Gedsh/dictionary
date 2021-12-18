@@ -58,6 +58,10 @@ dependencies {
     //ViewBinding
     implementation(ViewBinding.binding)
 
+    //RecycleView Adapter
+    implementation(RecycleView.adapter_delegates)
+    implementation(RecycleView.adapter_delegates_viewbinding)
+
     //Test
     testImplementation(TestImpl.junit)
     androidTestImplementation(TestImpl.ext)

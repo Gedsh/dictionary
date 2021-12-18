@@ -6,6 +6,7 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.SimpleItemAnimator
 import by.kirich1409.viewbindingdelegate.viewBinding
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -54,7 +55,8 @@ class HistoryFragment : BaseFragment<List<String>>(
     }
 
     private fun initRecycler() {
-        binding.historyRecyclerview.itemAnimator?.changeDuration = 0
+        (binding.historyRecyclerview.itemAnimator as SimpleItemAnimator)
+            .supportsChangeAnimations = false
         ItemTouchHelper(ItemTouchHelperCallback(adapter)).apply {
             attachToRecyclerView(binding.historyRecyclerview)
         }

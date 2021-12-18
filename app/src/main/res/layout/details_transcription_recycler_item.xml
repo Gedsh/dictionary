@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/description_screen_transcription_button"
+        style="@style/BaseFlatButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:drawableEnd="@drawable/ic_play_vector"
+        android:drawablePadding="@dimen/margin_small"
+        android:textSize="@dimen/text_size_standard"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Cat" />
+
+    <ProgressBar
+        android:id="@+id/description_screen_loading_progress"
+        android:layout_width="@dimen/details_recycler_item_loading_progress_size"
+        android:layout_height="@dimen/details_recycler_item_loading_progress_size"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/description_screen_transcription_button"
+        app:layout_constraintStart_toEndOf="@+id/description_screen_transcription_button"
+        app:layout_constraintTop_toTopOf="@+id/description_screen_transcription_button"
+        tools:visibility="visible" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -35,6 +35,9 @@ object Versions {
     //ViewBinding
     const val binding = "1.5.3"
 
+    //RecycleView Adapter delegates
+    const val adapter_delegates = "4.3.1"
+
     //Test
     const val junit = "4.+"
     const val ext_junit = "1.1.3"

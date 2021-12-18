@@ -1,12 +1,14 @@
 package pan.alexander.dictionary.ui.translation
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import by.kirich1409.viewbindingdelegate.viewBinding
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import pan.alexander.core_ui.base.BaseFragment
+import pan.alexander.core_utils.Constants.LOG_TAG
 import pan.alexander.dictionary.R
 import pan.alexander.dictionary.databinding.TranslationFragmentBinding
 import pan.alexander.dictionary.domain.dto.TranslationDto
@@ -18,14 +20,29 @@ class TranslationFragment : BaseFragment<TranslationViewState>(
     R.layout.translation_fragment
 ) {
 
-    override val translationViewModel by viewModel<TranslationViewModel>()
+    override val uiViewModel by viewModel<TranslationViewModel>()
 
     private val binding by viewBinding(TranslationFragmentBinding::bind)
 
     private val adapter: TranslationAdapter by lazy { TranslationAdapter(::onItemClick) }
 
+    private val searchClickListener by lazy {
+        object : SearchDialogFragment.OnSearchClickListener {
+            override fun onClick(searchWord: String) {
+                uiViewModel.getTranslations(searchWord)
+                Log.e(LOG_TAG, "onClick($searchWord)")
+            }
+        }
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        setTitle()
+
+        checkSearchFragment()
+
+        savedInstanceState ?: checkArguments()
 
         initRecycler()
 
@@ -36,6 +53,26 @@ class TranslationFragment : BaseFragment<TranslationViewState>(
         observeViewStateChanges()
     }
 
+    private fun setTitle() {
+        activity?.setTitle(R.string.translations)
+    }
+
+    private fun checkSearchFragment() {
+        val searchDialogFragment = parentFragmentManager
+            .findFragmentByTag(BOTTOM_SHEET_FRAGMENT_DIALOG_TAG) as? SearchDialogFragment
+        searchDialogFragment?.setOnSearchClickListener(searchClickListener)
+    }
+
+    private fun checkArguments() {
+        if (uiViewModel.getViewStateLiveData().value == null) {
+            arguments?.getString(WORD_EXTRA)?.let {
+                uiViewModel.getTranslations(it)
+            } ?: arguments?.getBoolean(INIT_SEARCH_EXTRA)?.let {
+                initSearchFragment()
+            }
+        }
+    }
+
     private fun initRecycler() {
         binding.translationRecyclerview.layoutManager =
             LinearLayoutManager(requireContext())
@@ -44,21 +81,28 @@ class TranslationFragment : BaseFragment<TranslationViewState>(
 
     private fun initSearchFabClickListener() {
         binding.searchFab.setOnClickListener {
-            SearchDialogFragment.newInstance().also {
-                it.setOnSearchClickListener(object :
-                    SearchDialogFragment.OnSearchClickListener {
-                    override fun onClick(searchWord: String) {
-                        translationViewModel.getTranslations(searchWord)
-                    }
-                })
+            initSearchFragment()
+        }
+    }
+
+    private fun initSearchFragment(word: String? = null) {
+
+        val searchDialogFragment = parentFragmentManager
+            .findFragmentByTag(BOTTOM_SHEET_FRAGMENT_DIALOG_TAG) as? SearchDialogFragment
+        if (searchDialogFragment != null) {
+            searchDialogFragment.setOnSearchClickListener(searchClickListener)
+        } else {
+            SearchDialogFragment.newInstance(word).also {
+                it.setOnSearchClickListener(searchClickListener)
                 it.show(parentFragmentManager, BOTTOM_SHEET_FRAGMENT_DIALOG_TAG)
             }
         }
+
     }
 
     private fun initReloadButtonClickListener() {
         binding.reloadButton.setOnClickListener {
-            translationViewModel.getTranslations()
+            uiViewModel.getTranslations()
         }
     }
 
@@ -70,7 +114,7 @@ class TranslationFragment : BaseFragment<TranslationViewState>(
     }
 
     private fun observeViewStateChanges() {
-        translationViewModel.getViewStateLiveData().observe(viewLifecycleOwner) {
+        uiViewModel.getViewStateLiveData().observe(viewLifecycleOwner) {
             setState(it)
         }
     }
@@ -81,6 +125,7 @@ class TranslationFragment : BaseFragment<TranslationViewState>(
                 val translations = viewState.translations
                 if (translations.isEmpty()) {
                     showErrorScreen(getString(R.string.empty_server_response_on_success))
+                    initSearchFragment(uiViewModel.getLastWord())
                 } else {
                     showViewSuccess()
                     adapter.setData(translations)
@@ -135,7 +180,16 @@ class TranslationFragment : BaseFragment<TranslationViewState>(
     companion object {
         private const val BOTTOM_SHEET_FRAGMENT_DIALOG_TAG =
             "pan.alexander.dictionary.BOTTOM_SHEET_FRAGMENT_DIALOG_TAG"
+        private const val WORD_EXTRA = "pan.alexander.dictionary.WORD_EXTRA"
+        private const val INIT_SEARCH_EXTRA = "pan.alexander.dictionary.INIT_SEARCH_EXTRA"
 
-        fun newInstance() = TranslationFragment()
+        fun newInstance(word: String? = null, initSearch: Boolean? = null) =
+            TranslationFragment().also {
+                it.arguments = Bundle().apply {
+                    word?.let { word -> putString(WORD_EXTRA, word) }
+                    initSearch?.let { initSearch -> putBoolean(INIT_SEARCH_EXTRA, initSearch) }
+
+                }
+            }
     }
 }
