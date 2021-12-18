@@ -11,6 +11,7 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
+import org.koin.core.qualifier.named
 import org.koin.dsl.module
 import pan.alexander.dictionary.BuildConfig
 import pan.alexander.dictionary.data.local.LocalDataSource
@@ -41,32 +42,41 @@ import java.util.concurrent.TimeUnit
 
 private const val CALL_TIMEOUT_SEC = 5L
 
+const val ACTIVITY_RETAINED_SCOPE = "pan.alexander.dictionary.ACTIVITY_RETAINED_SCOPE"
+
 object AppModules {
 
     @ExperimentalCoroutinesApi
     val vmModule = module {
         viewModel {
-            TranslationViewModel(interactor = get())
+            TranslationViewModel()
         }
         viewModel {
-            HistoryViewModel(interactor = get())
+            HistoryViewModel()
         }
     }
 
     val interactorModule = module {
-        factory<TranslationInteractor> {
-            TranslationInteractorImpl(
-                localRepository = get(),
-                remoteRepository = get(),
-                networkRepository = get(),
-                dispatcherProvider = get()
-            )
+
+        scope(named(ACTIVITY_RETAINED_SCOPE)) {
+            scoped <TranslationInteractor> {
+                TranslationInteractorImpl(
+                    localRepository = get(),
+                    remoteRepository = get(),
+                    networkRepository = get(),
+                    dispatcherProvider = get()
+                )
+            }
         }
-        factory<HistoryInteractor> {
-            HistoryInteractorImpl(
-                localRepository = get()
-            )
+
+        scope(named(ACTIVITY_RETAINED_SCOPE)) {
+            scoped<HistoryInteractor> {
+                HistoryInteractorImpl(
+                    localRepository = get()
+                )
+            }
         }
+
     }
 
     val repoModule = module {

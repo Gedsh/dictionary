@@ -4,7 +4,9 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MenuItem
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import org.koin.android.ext.android.getKoin
 import pan.alexander.dictionary.R
+import pan.alexander.dictionary.di.ACTIVITY_RETAINED_SCOPE
 import pan.alexander.dictionary.ui.history.HistoryFragment
 
 @ExperimentalCoroutinesApi
@@ -56,5 +58,13 @@ class MainActivity : AppCompatActivity() {
             }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    override fun onStop() {
+        super.onStop()
+
+        if (!isChangingConfigurations) {
+            getKoin().getScopeOrNull(ACTIVITY_RETAINED_SCOPE)?.close()
+        }
     }
 }

@@ -5,16 +5,21 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import org.koin.core.qualifier.named
+import org.koin.java.KoinJavaComponent.getKoin
 import pan.alexander.core_utils.logger.AppLogger
 import pan.alexander.dictionary.domain.translation.TranslationInteractor
 import pan.alexander.dictionary.domain.translation.TranslationResponseState
 import pan.alexander.core_ui.base.BaseViewModel
 import pan.alexander.core_utils.Constants.WORD_REGEX
+import pan.alexander.dictionary.di.ACTIVITY_RETAINED_SCOPE
 
 @ExperimentalCoroutinesApi
-class TranslationViewModel(
-    private val interactor: TranslationInteractor
-) : BaseViewModel<TranslationViewState>() {
+class TranslationViewModel : BaseViewModel<TranslationViewState>() {
+
+    private val scope = getKoin()
+        .getOrCreateScope(ACTIVITY_RETAINED_SCOPE, named(ACTIVITY_RETAINED_SCOPE))
+    private val interactor: TranslationInteractor by scope.inject()
 
     private val request = MutableSharedFlow<String>(
         replay = 1,
