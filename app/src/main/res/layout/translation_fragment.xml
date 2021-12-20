@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
     android:fitsSystemWindows="true">
 
     <androidx.recyclerview.widget.RecyclerView
@@ -39,6 +40,20 @@
             android:layout_gravity="center" />
     </FrameLayout>
 
+    <FrameLayout
+        android:id="@+id/no_translations_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="visible">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:alpha="0.1"
+            app:srcCompat="@drawable/ic_search_word" />
+    </FrameLayout>
+
     <LinearLayout
         android:id="@+id/error_linear_layout"
         android:layout_width="match_parent"
@@ -52,8 +67,8 @@
             android:id="@+id/error_textview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textAlignment="center"
-            android:text="@string/error_textview_stub" />
+            android:text="@string/error_textview_stub"
+            android:textAlignment="center" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/reload_button"
