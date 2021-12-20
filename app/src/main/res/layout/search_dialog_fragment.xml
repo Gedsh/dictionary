@@ -3,6 +3,7 @@
     android:id="@+id/bottom_sheet_dialog_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@drawable/bottom_sheet_dialog_background"
     android:paddingTop="@dimen/margin_medium">
 
     <com.google.android.material.textfield.TextInputLayout

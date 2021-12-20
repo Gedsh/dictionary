@@ -157,6 +157,7 @@ class TranslationFragment : BaseFragment<TranslationViewState>(
         binding.searchFab.visibility = View.VISIBLE
         binding.loadingFrameLayout.visibility = View.GONE
         binding.errorLinearLayout.visibility = View.GONE
+        binding.noTranslationsLayout.visibility = View.GONE
     }
 
     private fun showViewLoading() {
@@ -164,6 +165,7 @@ class TranslationFragment : BaseFragment<TranslationViewState>(
         binding.searchFab.visibility = View.GONE
         binding.loadingFrameLayout.visibility = View.VISIBLE
         binding.errorLinearLayout.visibility = View.GONE
+        binding.noTranslationsLayout.visibility = View.GONE
     }
 
     private fun showViewError() {
@@ -171,6 +173,7 @@ class TranslationFragment : BaseFragment<TranslationViewState>(
         binding.searchFab.visibility = View.VISIBLE
         binding.loadingFrameLayout.visibility = View.GONE
         binding.errorLinearLayout.visibility = View.VISIBLE
+        binding.noTranslationsLayout.visibility = View.GONE
     }
 
     companion object {

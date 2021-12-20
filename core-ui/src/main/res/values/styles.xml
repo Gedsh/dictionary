@@ -33,9 +33,10 @@
 
     <style name="AppBottomSheetDialogTheme" parent="Theme.MaterialComponents.Light.BottomSheetDialog">
         <item name="bottomSheetStyle">@style/AppModalStyle</item>
+        <item name="android:colorBackground">@color/color_white</item>
     </style>
 
     <style name="AppModalStyle" parent="Widget.MaterialComponents.BottomSheet.Modal">
-        <item name="android:background">@drawable/bottom_sheet_dialog_background</item>
+        <item name="backgroundTint">@android:color/transparent</item>
     </style>
 </resources>

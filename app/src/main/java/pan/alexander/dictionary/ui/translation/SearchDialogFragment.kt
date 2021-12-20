@@ -9,6 +9,7 @@ import android.widget.TextView
 import androidx.core.widget.addTextChangedListener
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import pan.alexander.core_utils.Constants.WORD_REGEX
+import pan.alexander.dictionary.R
 import pan.alexander.dictionary.databinding.SearchDialogFragmentBinding
 
 class SearchDialogFragment : BottomSheetDialogFragment() {
@@ -19,6 +20,10 @@ class SearchDialogFragment : BottomSheetDialogFragment() {
 
     fun setOnSearchClickListener(listener: OnSearchClickListener) {
         onSearchClickListener = listener
+    }
+
+    override fun getTheme(): Int {
+        return R.style.AppBottomSheetDialogTheme
     }
 
     override fun onCreateView(

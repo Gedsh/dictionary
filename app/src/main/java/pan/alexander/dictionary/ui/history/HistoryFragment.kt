@@ -5,6 +5,8 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.SimpleItemAnimator
 import by.kirich1409.viewbindingdelegate.viewBinding
@@ -84,8 +86,16 @@ class HistoryFragment : BaseFragment<List<String>>(
         }
     }
 
-    override fun setState(viewState: List<String>) =
+    override fun setState(viewState: List<String>) {
+        if (viewState.isEmpty()) {
+            binding.noHistoryLayout.visibility = VISIBLE
+            binding.historyRecyclerview.visibility = GONE
+        } else {
+            binding.noHistoryLayout.visibility = GONE
+            binding.historyRecyclerview.visibility = VISIBLE
+        }
         adapter.setWords(viewState)
+    }
 
     private fun showTranslationsScreen(fragment: TranslationFragment) {
         val transaction by replace(fragment)
