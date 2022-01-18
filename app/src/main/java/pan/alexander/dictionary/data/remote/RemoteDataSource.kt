@@ -1,6 +1,6 @@
 package pan.alexander.dictionary.data.remote
 
-import pan.alexander.dictionary.data.remote.pojo.SearchResponsePojo
+import pan.alexander.core_web.pojo.SearchResponsePojo
 import retrofit2.Response
 
 interface RemoteDataSource {

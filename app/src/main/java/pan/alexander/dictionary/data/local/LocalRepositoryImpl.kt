@@ -1,11 +1,11 @@
 package pan.alexander.dictionary.data.local
 
-import pan.alexander.dictionary.database.LIST_ITEM_SEPARATOR
+import pan.alexander.core_db.enities.MeaningEntity
+import pan.alexander.core_db.enities.SearchResponseEntity
+import pan.alexander.core_db.enities.TranslationEntity
+import pan.alexander.core_db.database.LIST_ITEM_SEPARATOR
+import pan.alexander.core_utils.Constants.NUMBER_REGEX
 import pan.alexander.dictionary.domain.LocalRepository
-import pan.alexander.dictionary.domain.entities.MeaningEntity
-import pan.alexander.dictionary.domain.entities.SearchResponseEntity
-import pan.alexander.dictionary.domain.entities.TranslationEntity
-import pan.alexander.dictionary.utils.Constants.NUMBER_REGEX
 
 class LocalRepositoryImpl(
     private val localDataSource: LocalDataSource

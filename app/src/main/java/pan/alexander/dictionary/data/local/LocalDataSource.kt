@@ -1,8 +1,8 @@
 package pan.alexander.dictionary.data.local
 
-import pan.alexander.dictionary.domain.entities.MeaningEntity
-import pan.alexander.dictionary.domain.entities.SearchResponseEntity
-import pan.alexander.dictionary.domain.entities.TranslationEntity
+import pan.alexander.core_db.enities.MeaningEntity
+import pan.alexander.core_db.enities.SearchResponseEntity
+import pan.alexander.core_db.enities.TranslationEntity
 
 interface LocalDataSource {
     suspend fun getSearchResponseIdsByWord(word: String): String
