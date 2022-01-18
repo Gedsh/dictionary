@@ -1,14 +1,12 @@
 package pan.alexander.dictionary.data.remote
 
-import io.reactivex.rxjava3.core.Single
-import pan.alexander.dictionary.data.remote.pojo.ErrorResponsePojo
+import pan.alexander.core_web.pojo.ErrorResponsePojo
 import pan.alexander.dictionary.domain.RemoteRepository
-import pan.alexander.dictionary.domain.entities.Translation
+import pan.alexander.dictionary.domain.dto.TranslationDto
 import retrofit2.Retrofit
 import java.io.IOException
-import javax.inject.Inject
 
-class RemoteRepositoryImpl @Inject constructor(
+class RemoteRepositoryImpl(
     private val remoteDataSource: RemoteDataSource,
     private val retrofit: Retrofit
 ) : RemoteRepository {
@@ -17,11 +15,14 @@ class RemoteRepositoryImpl @Inject constructor(
         retrofit.responseBodyConverter<ErrorResponsePojo>(ErrorResponsePojo::class.java, arrayOf())
     }
 
-    override fun requestTranslations(word: String): Single<List<Translation>> =
+    override suspend fun requestTranslations(word: String): List<TranslationDto> =
         remoteDataSource.requestTranslations(word)
-            .map { response ->
+            .let { response ->
                 if (response.isSuccessful) {
-                    response.body()?.map { TranslationMapper.map(it) } ?: emptyList()
+                    response.body()?.filter {
+                        it.id != null
+                    }?.map { TranslationPojoToDtoMapper.map(it) }
+                        ?: emptyList()
                 } else {
                     response.errorBody()?.let {
                         converter.runCatching {

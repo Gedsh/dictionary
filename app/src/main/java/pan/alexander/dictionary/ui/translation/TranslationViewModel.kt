@@ -1,43 +1,54 @@
 package pan.alexander.dictionary.ui.translation
 
-import io.reactivex.rxjava3.kotlin.subscribeBy
-import io.reactivex.rxjava3.subjects.BehaviorSubject
-import pan.alexander.dictionary.domain.TranslationInteractor
-import pan.alexander.dictionary.domain.TranslationResponseState
-import pan.alexander.dictionary.ui.base.BaseViewModel
-import pan.alexander.dictionary.utils.logger.AppLogger
-import javax.inject.Inject
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.channels.BufferOverflow
+import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.launch
+import pan.alexander.core_utils.logger.AppLogger
+import pan.alexander.dictionary.domain.translation.TranslationInteractor
+import pan.alexander.dictionary.domain.translation.TranslationResponseState
+import pan.alexander.core_ui.base.BaseViewModel
 
-class TranslationViewModel @Inject constructor(
+@ExperimentalCoroutinesApi
+class TranslationViewModel(
     private val interactor: TranslationInteractor
 ) : BaseViewModel<TranslationViewState>() {
 
-    @Suppress("USELESS_CAST")
-    private val request: BehaviorSubject<String> = BehaviorSubject.create<String>().apply {
-        switchMapSingle { word ->
+    private val request = MutableSharedFlow<String>(
+        replay = 1,
+        extraBufferCapacity = 0,
+        onBufferOverflow = BufferOverflow.DROP_OLDEST
+    ).apply {
+        filter {
+            it.isNotBlank()
+        }.flatMapLatest {
             viewStateMutableLiveData.value = TranslationViewState.Loading()
-            interactor.getTranslations(word).map {
-                when (it) {
-                    is TranslationResponseState.Success ->
-                        TranslationViewState.Success(it.translations) as TranslationViewState
-                    is TranslationResponseState.NoConnection ->
-                        TranslationViewState.NoConnection
-                }
-            }.onErrorReturn {
-                AppLogger.logE("Requesting translation failed", it)
-                TranslationViewState.Error(it)
+            handleTranslations(this)
+        }.also {
+            viewModelScope.launch {
+                it.onEach {
+                    viewStateMutableLiveData.value = it
+                }.collect()
             }
-        }.subscribeBy(
-            onNext = {
-                viewStateMutableLiveData.value = it
-            }
-        ).autoDispose()
+        }
     }
 
-    fun getTranslations(word: String = request.value ?: "") {
-        if (word.isNotBlank()) {
-            request.onNext(word)
+    private fun handleTranslations(flow: SharedFlow<String>) =
+        interactor.getTranslations(flow).map { response ->
+            when (response) {
+                is TranslationResponseState.Success ->
+                    TranslationViewState.Success(response.translations)
+                is TranslationResponseState.NoConnection ->
+                    TranslationViewState.NoConnection
+            }
+        }.catch { error ->
+            AppLogger.logE("Requesting translation failed", error)
+            emit(TranslationViewState.Error(error))
         }
+
+    fun getTranslations(word: String = request.replayCache.firstOrNull() ?: "") {
+        request.tryEmit(word)
     }
 
 }
