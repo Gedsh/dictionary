@@ -7,7 +7,6 @@ import pan.alexander.core_db.enities.TranslationEntity
 import pan.alexander.core_db.database.MeaningDao
 import pan.alexander.core_db.database.SearchResponseDao
 import pan.alexander.core_db.database.TranslationDao
-import pan.alexander.core_db.enities.HistoryEntity
 
 class LocalDataSourceImpl(
     private val searchResponseDao: SearchResponseDao,
