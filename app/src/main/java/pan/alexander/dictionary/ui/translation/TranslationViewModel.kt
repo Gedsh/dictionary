@@ -5,10 +5,10 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
-import pan.alexander.dictionary.domain.TranslationInteractor
-import pan.alexander.dictionary.domain.TranslationResponseState
-import pan.alexander.dictionary.ui.base.BaseViewModel
-import pan.alexander.dictionary.utils.logger.AppLogger
+import pan.alexander.core_utils.logger.AppLogger
+import pan.alexander.dictionary.domain.translation.TranslationInteractor
+import pan.alexander.dictionary.domain.translation.TranslationResponseState
+import pan.alexander.core_ui.base.BaseViewModel
 
 @ExperimentalCoroutinesApi
 class TranslationViewModel(
@@ -27,9 +27,9 @@ class TranslationViewModel(
             handleTranslations(this)
         }.also {
             viewModelScope.launch {
-                it.collect {
+                it.onEach {
                     viewStateMutableLiveData.value = it
-                }
+                }.collect()
             }
         }
     }

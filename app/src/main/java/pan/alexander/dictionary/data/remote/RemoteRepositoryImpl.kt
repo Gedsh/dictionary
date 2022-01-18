@@ -1,8 +1,8 @@
 package pan.alexander.dictionary.data.remote
 
-import pan.alexander.dictionary.data.remote.pojo.ErrorResponsePojo
+import pan.alexander.core_web.pojo.ErrorResponsePojo
 import pan.alexander.dictionary.domain.RemoteRepository
-import pan.alexander.dictionary.domain.entities.Translation
+import pan.alexander.dictionary.domain.dto.TranslationDto
 import retrofit2.Retrofit
 import java.io.IOException
 
@@ -15,11 +15,14 @@ class RemoteRepositoryImpl(
         retrofit.responseBodyConverter<ErrorResponsePojo>(ErrorResponsePojo::class.java, arrayOf())
     }
 
-    override suspend fun requestTranslations(word: String): List<Translation> =
+    override suspend fun requestTranslations(word: String): List<TranslationDto> =
         remoteDataSource.requestTranslations(word)
             .let { response ->
                 if (response.isSuccessful) {
-                    response.body()?.map { TranslationMapper.map(it) } ?: emptyList()
+                    response.body()?.filter {
+                        it.id != null
+                    }?.map { TranslationPojoToDtoMapper.map(it) }
+                        ?: emptyList()
                 } else {
                     response.errorBody()?.let {
                         converter.runCatching {
