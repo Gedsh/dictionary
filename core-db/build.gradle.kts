@@ -5,7 +5,14 @@ plugins {
 }
 
 dependencies {
+
     implementation(projects.coreUtils)
+
+    //Room
     implementation(Room.runtime)
     implementation(Room.room_ktx)
+
+    //Test
+    testImplementation(TestImpl.junit)
+    androidTestImplementation(TestImpl.ext)
 }
