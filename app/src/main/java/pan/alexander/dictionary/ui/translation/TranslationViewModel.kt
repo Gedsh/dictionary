@@ -7,12 +7,13 @@ import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import org.koin.core.qualifier.named
 import org.koin.java.KoinJavaComponent.getKoin
-import pan.alexander.core_utils.logger.AppLogger
 import pan.alexander.dictionary.domain.translation.TranslationInteractor
 import pan.alexander.dictionary.domain.translation.TranslationResponseState
 import pan.alexander.core_ui.base.BaseViewModel
 import pan.alexander.core_utils.Constants.WORD_REGEX
+import pan.alexander.core_utils.logger.AppLogger.loge
 import pan.alexander.dictionary.di.ACTIVITY_RETAINED_SCOPE
+import java.lang.Exception
 
 @ExperimentalCoroutinesApi
 class TranslationViewModel : BaseViewModel<TranslationViewState>() {
@@ -41,17 +42,20 @@ class TranslationViewModel : BaseViewModel<TranslationViewState>() {
     }
 
     private fun handleTranslations(flow: SharedFlow<String>) =
-        interactor.getTranslations(flow).map { response ->
-            when (response) {
-                is TranslationResponseState.Success ->
-                    TranslationViewState.Success(response.translations)
-                is TranslationResponseState.NoConnection ->
-                    TranslationViewState.NoConnection
+        try {
+            interactor.getTranslations(flow).map { response ->
+                when (response) {
+                    is TranslationResponseState.Success ->
+                        TranslationViewState.Success(response.translations)
+                    is TranslationResponseState.NoConnection ->
+                        TranslationViewState.NoConnection
+                }
             }
-        }.catch { error ->
-            AppLogger.logE("Requesting translation failed", error)
-            emit(TranslationViewState.Error(error))
+        } catch(e: Exception) {
+            loge("Requesting translation failed", e)
+            flowOf(TranslationViewState.Error(e))
         }
+
 
     fun getTranslations(word: String = getLastWord()) {
         request.tryEmit(word)

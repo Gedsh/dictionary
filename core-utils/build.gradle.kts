@@ -15,6 +15,7 @@ android {
 dependencies {
     //Coroutines
     implementation(Kotlin.coroutines_android)
+    implementation(TestImpl.coroutines_test)
 
     //Test
     testImplementation(TestImpl.junit)

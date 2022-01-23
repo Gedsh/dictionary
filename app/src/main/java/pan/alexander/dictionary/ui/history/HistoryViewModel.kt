@@ -5,7 +5,7 @@ import kotlinx.coroutines.launch
 import org.koin.core.qualifier.named
 import org.koin.java.KoinJavaComponent.getKoin
 import pan.alexander.core_ui.base.BaseViewModel
-import pan.alexander.core_utils.logger.AppLogger
+import pan.alexander.core_utils.logger.AppLogger.loge
 import pan.alexander.dictionary.di.ACTIVITY_RETAINED_SCOPE
 import pan.alexander.dictionary.domain.history.HistoryInteractor
 
@@ -20,7 +20,7 @@ class HistoryViewModel : BaseViewModel<List<String>>() {
             try {
                 viewStateMutableLiveData.value = interactor.getHistory()
             } catch (e: Exception) {
-                AppLogger.logE("Failed to retrieve history", e)
+                loge("Failed to retrieve history", e)
             }
         }
     }
@@ -31,7 +31,7 @@ class HistoryViewModel : BaseViewModel<List<String>>() {
                 interactor.deleteWordFromHistory(word)
                 viewStateMutableLiveData.value = interactor.getHistory()
             } catch (e: Exception) {
-                AppLogger.logE("Failed to delete word $word", e)
+                loge("Failed to delete word $word", e)
             }
         }
     }
@@ -42,7 +42,7 @@ class HistoryViewModel : BaseViewModel<List<String>>() {
                 interactor.clearHistory()
                 viewStateMutableLiveData.value = emptyList()
             } catch (e: java.lang.Exception) {
-                AppLogger.logE("Failed to clear history", e)
+                loge("Failed to clear history", e)
             }
         }
     }

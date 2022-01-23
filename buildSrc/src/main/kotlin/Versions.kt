@@ -40,6 +40,11 @@ object Versions {
 
     //Test
     const val junit = "4.+"
+    const val core_testing = "2.1.0"
     const val ext_junit = "1.1.3"
     const val espresso_core = "3.4.0"
+    const val mockito_inline = "4.2.0"
+    const val mockito_android = "4.2.0"
+    const val coroutines_test = "1.6.0"
+    const val mockito_kotlin = "4.0.0"
 }
