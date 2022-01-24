@@ -3,12 +3,8 @@ package pan.alexander.dictionary.ui.translation
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.test.StandardTestDispatcher
-import kotlinx.coroutines.test.resetMain
-import kotlinx.coroutines.test.runTest
-import kotlinx.coroutines.test.setMain
+import kotlinx.coroutines.test.*
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Before
@@ -38,7 +34,7 @@ import kotlin.test.assertTrue
 @Suppress("BlockingMethodInNonBlockingContext")
 class TranslationViewModelTest : KoinTest {
 
-    private val testDispatcher = StandardTestDispatcher()
+    private val testDispatcher = UnconfinedTestDispatcher()
 
     private lateinit var scope: Scope
 
@@ -86,8 +82,6 @@ class TranslationViewModelTest : KoinTest {
 
         viewModel.getTranslations("")
 
-        delay(1)
-
         verify(interactor, never()).getTranslations(org.mockito.kotlin.any())
 
         assertTrue(viewModel.getViewStateLiveData().value == null)
@@ -101,8 +95,6 @@ class TranslationViewModelTest : KoinTest {
         val interactor = scope.declareMock<TranslationInteractor>()
 
         viewModel.getTranslations("word$")
-
-        delay(1)
 
         verify(interactor, never()).getTranslations(org.mockito.kotlin.any())
 
@@ -119,8 +111,6 @@ class TranslationViewModelTest : KoinTest {
             .thenThrow(IOException::class.java)
 
         viewModel.getTranslations(word)
-
-        delay(1)
 
         verify(interactor).getTranslations(org.mockito.kotlin.any())
 
@@ -139,8 +129,6 @@ class TranslationViewModelTest : KoinTest {
             )
 
         viewModel.getTranslations(word)
-
-        delay(1)
 
         verify(interactor).getTranslations(org.mockito.kotlin.any())
 
@@ -162,8 +150,6 @@ class TranslationViewModelTest : KoinTest {
             )
 
         viewModel.getTranslations(word)
-
-        delay(1)
 
         verify(interactor).getTranslations(org.mockito.kotlin.any())
 
