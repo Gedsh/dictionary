@@ -5,5 +5,5 @@ import kotlinx.coroutines.MainCoroutineDispatcher
 
 interface DispatcherProvider {
     fun io(): CoroutineDispatcher
-    fun ui(): MainCoroutineDispatcher
+    fun ui(): CoroutineDispatcher
 }

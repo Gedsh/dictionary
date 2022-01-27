@@ -64,6 +64,13 @@ dependencies {
 
     //Test
     testImplementation(TestImpl.junit)
+    testImplementation(TestImpl.mockito_inline)
+    testImplementation (TestImpl.mockito_kotlin)
+    testImplementation(TestImpl.coroutines_test)
+    testImplementation(TestImpl.koin_test)
+    testImplementation(TestImpl.koin_test_junit)
+    testImplementation(TestImpl.core_testing)
+    androidTestImplementation(TestImpl.mockito_android)
     androidTestImplementation(TestImpl.ext)
     androidTestImplementation(TestImpl.espresso)
 

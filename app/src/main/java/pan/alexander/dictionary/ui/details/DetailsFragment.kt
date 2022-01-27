@@ -13,7 +13,7 @@ import kotlinx.coroutines.launch
 import org.koin.android.ext.android.get
 import org.koin.android.ext.android.inject
 import pan.alexander.core_utils.coroutines.DispatcherProvider
-import pan.alexander.core_utils.logger.AppLogger
+import pan.alexander.core_utils.logger.AppLogger.loge
 import pan.alexander.dictionary.R
 import pan.alexander.dictionary.databinding.DetailsFragmentBinding
 import pan.alexander.dictionary.domain.dto.TranslationDto
@@ -94,7 +94,7 @@ class DetailsFragment : Fragment(R.layout.details_fragment) {
                 setData(true)
                 trySetupPlayer()
             } catch (e: Exception) {
-                AppLogger.logE("Play word failure", e)
+                loge("Play word failure", e)
             } finally {
                 setData(false)
             }
