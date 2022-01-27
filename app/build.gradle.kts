@@ -70,8 +70,10 @@ dependencies {
     testImplementation(TestImpl.koin_test)
     testImplementation(TestImpl.koin_test_junit)
     testImplementation(TestImpl.core_testing)
+    testImplementation(TestImpl.robolectric)
+    testImplementation(TestImpl.ext)
+    testImplementation(TestImpl.core_ktx)
     androidTestImplementation(TestImpl.mockito_android)
-    androidTestImplementation(TestImpl.ext)
     androidTestImplementation(TestImpl.espresso)
 
     implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))

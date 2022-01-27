@@ -62,4 +62,6 @@ object TestImpl {
     const val koin_test = "io.insert-koin:koin-test:${Versions.koinCore}"
     const val koin_test_junit = "io.insert-koin:koin-test-junit4:${Versions.koinCore}"
     const val mockito_kotlin = "org.mockito.kotlin:mockito-kotlin:${Versions.mockito_kotlin}"
+    const val robolectric = "org.robolectric:robolectric:${Versions.robolectric}"
+    const val core_ktx = "androidx.test:core-ktx:${Versions.core_ktx}"
 }

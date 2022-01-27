@@ -14,5 +14,11 @@ dependencies {
 
     //Test
     testImplementation(TestImpl.junit)
-    androidTestImplementation(TestImpl.ext)
+    testImplementation(TestImpl.mockito_inline)
+    testImplementation (TestImpl.mockito_kotlin)
+    testImplementation(TestImpl.robolectric)
+    testImplementation(TestImpl.ext)
+    testImplementation(TestImpl.core_testing)
+    testImplementation(TestImpl.coroutines_test)
+    testImplementation(Design.appcompat)
 }
