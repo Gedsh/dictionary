@@ -47,4 +47,6 @@ object Versions {
     const val mockito_android = "4.2.0"
     const val coroutines_test = "1.6.0"
     const val mockito_kotlin = "4.0.0"
+    const val robolectric = "4.6"
+    const val core_ktx = "1.4.0"
 }

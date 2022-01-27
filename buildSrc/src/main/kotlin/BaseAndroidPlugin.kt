@@ -90,6 +90,8 @@ open class BaseAndroidPlugin : Plugin<Project> {
             sourceCompatibility = Config.java_version
             targetCompatibility = Config.java_version
         }
+
+        testOptions.unitTests.isIncludeAndroidResources = true
     }
 
     private fun Project.android(action: BaseExtension.() -> Unit) =
