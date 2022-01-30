@@ -12,16 +12,19 @@ import android.view.View
 import android.view.ViewTreeObserver
 import android.view.animation.AccelerateInterpolator
 import androidx.annotation.RequiresApi
+import androidx.annotation.VisibleForTesting
 import androidx.core.animation.doOnEnd
 import androidx.core.content.ContextCompat
 import androidx.core.view.get
 import by.kirich1409.viewbindingdelegate.viewBinding
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.koin.android.ext.android.getKoin
+import org.koin.android.ext.android.inject
 import pan.alexander.core_ui.delegates.replace
 import pan.alexander.dictionary.R
 import pan.alexander.dictionary.databinding.MainActivityBinding
 import pan.alexander.dictionary.di.ACTIVITY_RETAINED_SCOPE
+import pan.alexander.dictionary.test.EspressoIdlingResource
 import pan.alexander.dictionary.ui.history.HistoryFragment
 
 @ExperimentalCoroutinesApi
@@ -143,4 +146,7 @@ class MainActivity : AppCompatActivity() {
             getKoin().getScopeOrNull(ACTIVITY_RETAINED_SCOPE)?.close()
         }
     }
+
+    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+    val espressoIdlingResource: EspressoIdlingResource by inject()
 }
