@@ -56,6 +56,7 @@ object TestImpl {
     const val core_testing = "androidx.arch.core:core-testing:${Versions.core_testing}"
     const val ext = "androidx.test.ext:junit:${Versions.ext_junit}"
     const val espresso = "androidx.test.espresso:espresso-core:${Versions.espresso_core}"
+    const val espresso_idling = "androidx.test.espresso:espresso-idling-resource:${Versions.espresso_core}"
     const val mockito_inline = "org.mockito:mockito-inline:${Versions.mockito_inline}"
     const val mockito_android = "org.mockito:mockito-android:${Versions.mockito_android}"
     const val coroutines_test = "org.jetbrains.kotlinx:kotlinx-coroutines-test:${Versions.coroutines_test}"

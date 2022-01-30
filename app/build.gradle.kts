@@ -73,8 +73,10 @@ dependencies {
     testImplementation(TestImpl.robolectric)
     testImplementation(TestImpl.ext)
     testImplementation(TestImpl.core_ktx)
+    androidTestImplementation(TestImpl.ext)
     androidTestImplementation(TestImpl.mockito_android)
     androidTestImplementation(TestImpl.espresso)
+    implementation(TestImpl.espresso_idling)
 
     implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
 }

@@ -34,6 +34,7 @@ import pan.alexander.dictionary.domain.translation.TranslationInteractorImpl
 import pan.alexander.core_web.web.SkyEngApi
 import pan.alexander.dictionary.domain.history.HistoryInteractor
 import pan.alexander.dictionary.domain.history.HistoryInteractorImpl
+import pan.alexander.dictionary.test.EspressoIdlingResource
 import pan.alexander.dictionary.ui.history.HistoryViewModel
 import pan.alexander.dictionary.ui.translation.TranslationViewModel
 import retrofit2.Retrofit
@@ -59,7 +60,7 @@ object AppModules {
     val interactorModule = module {
 
         scope(named(ACTIVITY_RETAINED_SCOPE)) {
-            scoped <TranslationInteractor> {
+            scoped<TranslationInteractor> {
                 TranslationInteractorImpl(
                     localRepository = get(),
                     remoteRepository = get(),
@@ -210,6 +211,12 @@ object AppModules {
                     }
                 }
                 .build()
+        }
+    }
+
+    val testModule = module {
+        single {
+            EspressoIdlingResource()
         }
     }
 }

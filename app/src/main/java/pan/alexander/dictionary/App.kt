@@ -6,12 +6,14 @@ import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.GlobalContext.startKoin
 import org.koin.core.logger.Level
+import pan.alexander.dictionary.BuildConfig
 import pan.alexander.dictionary.di.AppModules.dataSourceModule
 import pan.alexander.dictionary.di.AppModules.imageLoaderModule
 import pan.alexander.dictionary.di.AppModules.interactorModule
 import pan.alexander.dictionary.di.AppModules.repoModule
 import pan.alexander.dictionary.di.AppModules.retrofitModule
 import pan.alexander.dictionary.di.AppModules.roomModule
+import pan.alexander.dictionary.di.AppModules.testModule
 import pan.alexander.dictionary.di.AppModules.utilModule
 import pan.alexander.dictionary.di.AppModules.vmModule
 
@@ -36,7 +38,8 @@ class App : Application() {
                 utilModule,
                 retrofitModule,
                 roomModule,
-                imageLoaderModule
+                imageLoaderModule,
+                testModule
             )
         }
     }
