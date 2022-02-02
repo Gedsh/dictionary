@@ -92,6 +92,13 @@ open class BaseAndroidPlugin : Plugin<Project> {
         }
 
         testOptions.unitTests.isIncludeAndroidResources = true
+
+        sourceSets["androidTest"].java {
+            srcDir("src/sharedTestData/java")
+        }
+        sourceSets["test"].java {
+            srcDir("src/sharedTestData/java")
+        }
     }
 
     private fun Project.android(action: BaseExtension.() -> Unit) =

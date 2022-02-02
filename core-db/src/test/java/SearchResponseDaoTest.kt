@@ -1,4 +1,5 @@
 import android.os.Build
+import android.provider.UserDictionary.Words.WORD
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
@@ -17,11 +18,10 @@ class SearchResponseDaoTest : BaseDatabaseTest() {
 
     private lateinit var searchResponseDao: SearchResponseDao
 
-    private val word = "word"
     private val id = 0L
 
     private val searchResponseEntity = SearchResponseEntity(
-        word,
+        WORD,
         listOf(id)
     )
 
@@ -33,6 +33,6 @@ class SearchResponseDaoTest : BaseDatabaseTest() {
     @Test
     fun searchResponseDao_GetIdsByWord() = runTest {
         searchResponseDao.insert(searchResponseEntity)
-        assertEquals(id, searchResponseDao.getIdsByWord(word)!!.toLong())
+        assertEquals(id, searchResponseDao.getIdsByWord(WORD)!!.toLong())
     }
 }

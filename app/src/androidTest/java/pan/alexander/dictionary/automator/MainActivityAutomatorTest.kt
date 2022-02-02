@@ -15,8 +15,7 @@ import org.junit.Assert.assertNotNull
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-
-private const val LAUNCH_TIMEOUT = 5000L
+import pan.alexander.dictionary.tests.TIMEOUT
 
 @RunWith(AndroidJUnit4::class)
 @SdkSuppress(minSdkVersion = 18)
@@ -34,7 +33,7 @@ class MainActivityAutomatorTest {
         assertThat(launcherPackage, notNullValue())
         uiDevice.wait(
             Until.hasObject(By.pkg(launcherPackage).depth(0)),
-            LAUNCH_TIMEOUT
+            TIMEOUT
         )
 
         val intent = context.packageManager.getLaunchIntentForPackage(packageName)
@@ -43,7 +42,7 @@ class MainActivityAutomatorTest {
 
         uiDevice.wait(
             Until.hasObject(By.pkg(packageName).depth(0)),
-            LAUNCH_TIMEOUT
+            TIMEOUT
         )
     }
 

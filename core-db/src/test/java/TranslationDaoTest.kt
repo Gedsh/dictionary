@@ -1,4 +1,5 @@
 import android.os.Build
+import android.provider.UserDictionary.Words.WORD
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
@@ -18,7 +19,7 @@ class TranslationDaoTest : BaseDatabaseTest() {
 
     private val translationEntity = TranslationEntity(
         0,
-        "word",
+        WORD,
         listOf(0)
     )
 

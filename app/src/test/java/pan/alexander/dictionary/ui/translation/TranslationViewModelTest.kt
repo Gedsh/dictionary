@@ -23,10 +23,12 @@ import org.koin.test.mock.declareMock
 import org.mockito.Mockito.*
 import pan.alexander.dictionary.BuildConfig
 import pan.alexander.dictionary.di.ACTIVITY_RETAINED_SCOPE
-import pan.alexander.dictionary.di.AppModules
+import pan.alexander.dictionary.di.AppModules.testModule
+import pan.alexander.dictionary.di.AppModules.vmModule
 import pan.alexander.dictionary.domain.dto.TranslationDto
 import pan.alexander.dictionary.domain.translation.TranslationInteractor
 import pan.alexander.dictionary.domain.translation.TranslationResponseState
+import pan.alexander.dictionary.tests.WORD
 import java.io.IOException
 import kotlin.test.assertTrue
 
@@ -38,11 +40,9 @@ class TranslationViewModelTest : KoinTest {
 
     private lateinit var scope: Scope
 
-    private val word = "word"
-
     private val translationDto = TranslationDto(
         0,
-        word,
+        WORD,
         emptyList()
     )
 
@@ -52,7 +52,7 @@ class TranslationViewModelTest : KoinTest {
     @get:Rule
     val koinTestRule = KoinTestRule.create {
         printLogger(if (BuildConfig.DEBUG) Level.ERROR else Level.NONE)
-        modules(AppModules.vmModule)
+        modules(vmModule, testModule)
     }
 
     @get:Rule
@@ -110,7 +110,7 @@ class TranslationViewModelTest : KoinTest {
         `when`(interactor.getTranslations(org.mockito.kotlin.any()))
             .thenThrow(IOException::class.java)
 
-        viewModel.getTranslations(word)
+        viewModel.getTranslations(WORD)
 
         verify(interactor).getTranslations(org.mockito.kotlin.any())
 
@@ -128,7 +128,7 @@ class TranslationViewModelTest : KoinTest {
                 flowOf(TranslationResponseState.NoConnection)
             )
 
-        viewModel.getTranslations(word)
+        viewModel.getTranslations(WORD)
 
         verify(interactor).getTranslations(org.mockito.kotlin.any())
 
@@ -149,7 +149,7 @@ class TranslationViewModelTest : KoinTest {
                 flowOf(TranslationResponseState.Success(listOf(translationDto)))
             )
 
-        viewModel.getTranslations(word)
+        viewModel.getTranslations(WORD)
 
         verify(interactor).getTranslations(org.mockito.kotlin.any())
 
@@ -180,8 +180,8 @@ class TranslationViewModelTest : KoinTest {
             )
 
         viewModel.getTranslations("some other word")
-        viewModel.getTranslations(word)
+        viewModel.getTranslations(WORD)
 
-        assertEquals(viewModel.getLastWord(), word)
+        assertEquals(viewModel.getLastWord(), WORD)
     }
 }
