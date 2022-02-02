@@ -65,4 +65,5 @@ object TestImpl {
     const val mockito_kotlin = "org.mockito.kotlin:mockito-kotlin:${Versions.mockito_kotlin}"
     const val robolectric = "org.robolectric:robolectric:${Versions.robolectric}"
     const val core_ktx = "androidx.test:core-ktx:${Versions.core_ktx}"
+    const val uiautomator = "androidx.test.uiautomator:uiautomator:${Versions.uiautomator}"
 }

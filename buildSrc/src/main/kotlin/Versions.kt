@@ -49,4 +49,5 @@ object Versions {
     const val mockito_kotlin = "4.0.0"
     const val robolectric = "4.6"
     const val core_ktx = "1.4.0"
+    const val uiautomator = "2.2.0"
 }

@@ -6,7 +6,6 @@ import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.GlobalContext.startKoin
 import org.koin.core.logger.Level
-import pan.alexander.dictionary.BuildConfig
 import pan.alexander.dictionary.di.AppModules.dataSourceModule
 import pan.alexander.dictionary.di.AppModules.imageLoaderModule
 import pan.alexander.dictionary.di.AppModules.interactorModule

@@ -1,4 +1,4 @@
-package pan.alexander.dictionary
+package pan.alexander.dictionary.espresso
 
 import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso.onView
@@ -14,13 +14,14 @@ import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
+import pan.alexander.dictionary.R
 import pan.alexander.dictionary.test.EspressoIdlingResource
 import pan.alexander.dictionary.ui.MainActivity
 
 @LargeTest
 @ExperimentalCoroutinesApi
 @RunWith(AndroidJUnit4::class)
-class UserScenarioTest {
+class UserScenarioEspressoTest {
 
     private lateinit var scenario: ActivityScenario<MainActivity>
     private lateinit var idlingResource: EspressoIdlingResource
