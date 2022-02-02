@@ -1,4 +1,4 @@
-package pan.alexander.dictionary.ui
+package pan.alexander.dictionary.espresso
 
 import androidx.lifecycle.Lifecycle
 import androidx.test.core.app.ActivityScenario
@@ -17,11 +17,12 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import pan.alexander.dictionary.R
+import pan.alexander.dictionary.ui.MainActivity
 
 @LargeTest
 @ExperimentalCoroutinesApi
 @RunWith(AndroidJUnit4::class)
-class MainActivityInstrumentedTest {
+class MainActivityEspressoTest {
 
     private lateinit var scenario: ActivityScenario<MainActivity>
 
