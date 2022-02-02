@@ -1,4 +1,5 @@
 import android.os.Build
+import android.provider.UserDictionary.Words.WORD
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
@@ -17,8 +18,6 @@ class HistoryDaoTest : BaseDatabaseTest() {
 
     private lateinit var historyDao: HistoryDao
 
-    private val word = "word"
-
     @Before
     fun setUp() {
         historyDao = db.historyDao()
@@ -26,20 +25,20 @@ class HistoryDaoTest : BaseDatabaseTest() {
 
     @Test
     fun historyDao_GetHistoryWords() = runTest {
-        historyDao.insertHistoryRecord(word)
-        assertEquals(word, historyDao.getHistoryWords().first())
+        historyDao.insertHistoryRecord(WORD)
+        assertEquals(WORD, historyDao.getHistoryWords().first())
     }
 
     @Test
     fun historyDao_DeleteWord() = runTest {
-        historyDao.insertHistoryRecord(word)
-        historyDao.deleteWord(word)
+        historyDao.insertHistoryRecord(WORD)
+        historyDao.deleteWord(WORD)
         assertTrue(historyDao.getHistoryWords().isEmpty())
     }
 
     @Test
     fun historyDao_DeleteAllWords() = runTest {
-        historyDao.insertHistoryRecord(word)
+        historyDao.insertHistoryRecord(WORD)
         historyDao.deleteAllWords()
         assertTrue(historyDao.getHistoryWords().isEmpty())
     }

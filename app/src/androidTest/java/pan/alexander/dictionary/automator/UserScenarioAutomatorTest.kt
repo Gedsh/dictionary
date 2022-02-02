@@ -14,13 +14,14 @@ import org.junit.Assert.assertNotNull
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
+import pan.alexander.dictionary.tests.TIMEOUT
+import pan.alexander.dictionary.tests.WORD
 import java.lang.Thread.sleep
 
-private const val TIMEOUT = 5000L
 private const val DELAY_WIFI_DISABLE = 1000L
 private const val WORD_ONLINE = "dog"
 private const val MEANING_ONLINE = "doggy"
-private const val WORD_OFFLINE = "word"
+private const val WORD_OFFLINE = WORD
 private const val MEANING_OFFLINE = "wordy"
 private const val WORD_NO_CONNECTION = "cat"
 private const val SHELL_WIFI_DISABLE = "svc wifi disable"

@@ -23,6 +23,7 @@ import pan.alexander.dictionary.domain.RemoteRepository
 import pan.alexander.dictionary.domain.dto.TranslationDto
 import pan.alexander.dictionary.domain.translation.TranslationInteractorImpl
 import pan.alexander.dictionary.domain.translation.TranslationResponseState
+import pan.alexander.dictionary.tests.WORD
 import java.io.IOException
 import java.lang.RuntimeException
 
@@ -44,8 +45,6 @@ class TranslationInteractorImplTest : BaseMockitoTest() {
     private val testScheduler = TestCoroutineScheduler()
     private val testDispatcherProvider: DispatcherProvider = TestDispatcherProviderImpl(testScheduler)
 
-    private val word = "word"
-
     @Before
     fun setUp() {
         translationInteractor = TranslationInteractorImpl(
@@ -59,7 +58,7 @@ class TranslationInteractorImplTest : BaseMockitoTest() {
     @Test
     fun getTranslations_NoLocalCache_NoConnection() = runTest {
 
-        `when`(localRepository.getSearchResponseIdsByWord(word)).thenReturn(emptyList())
+        `when`(localRepository.getSearchResponseIdsByWord(WORD)).thenReturn(emptyList())
         `when`(networkRepository.isConnectionAvailable()).thenReturn(false)
 
         assertEquals(
@@ -74,11 +73,11 @@ class TranslationInteractorImplTest : BaseMockitoTest() {
         val translationIds = listOf(10L)
         val translationEntity = TranslationEntity(
             0,
-            word,
+            WORD,
             emptyList()
         )
 
-        `when`(localRepository.getSearchResponseIdsByWord(word)).thenReturn(translationIds)
+        `when`(localRepository.getSearchResponseIdsByWord(WORD)).thenReturn(translationIds)
         `when`(localRepository.getTranslationsByIds(translationIds)).thenReturn(listOf(translationEntity))
         `when`(localRepository.getMeaningByIds(translationEntity.meaningIds)).thenReturn(emptyList())
 
@@ -86,22 +85,22 @@ class TranslationInteractorImplTest : BaseMockitoTest() {
             translationInteractor.getTranslations(getWordsFlow()).first() is TranslationResponseState.Success
         )
 
-        verify(localRepository).addWordToHistory(word)
+        verify(localRepository).addWordToHistory(WORD)
     }
 
     @Test
     fun getTranslations_NoLocalCache_ConnectionAvailable_ResponseWithException() = runTest(testScheduler) {
 
         `when`(networkRepository.isConnectionAvailable()).thenReturn(true)
-        `when`(localRepository.getSearchResponseIdsByWord(word)).thenReturn(emptyList())
-        `when`(remoteRepository.requestTranslations(word)).thenThrow(RuntimeException::class.java)
+        `when`(localRepository.getSearchResponseIdsByWord(WORD)).thenReturn(emptyList())
+        `when`(remoteRepository.requestTranslations(WORD)).thenThrow(RuntimeException::class.java)
 
         assertThrows(RuntimeException::class.java) {
             runBlocking(testScheduler) { translationInteractor.getTranslations(getWordsFlow()).first() }
         }
 
-        verify(remoteRepository).requestTranslations(word)
-        verify(localRepository, never()).addWordToHistory(word)
+        verify(remoteRepository).requestTranslations(WORD)
+        verify(localRepository, never()).addWordToHistory(WORD)
     }
 
     @Test
@@ -110,50 +109,50 @@ class TranslationInteractorImplTest : BaseMockitoTest() {
         val errorRetryCount = 3
 
         `when`(networkRepository.isConnectionAvailable()).thenReturn(true)
-        `when`(localRepository.getSearchResponseIdsByWord(word)).thenReturn(emptyList())
-        `when`(remoteRepository.requestTranslations(word)).thenThrow(IOException::class.java)
+        `when`(localRepository.getSearchResponseIdsByWord(WORD)).thenReturn(emptyList())
+        `when`(remoteRepository.requestTranslations(WORD)).thenThrow(IOException::class.java)
 
         assertThrows(IOException::class.java) {
             runBlocking(testScheduler) { translationInteractor.getTranslations(getWordsFlow()).first() }
         }
 
-        verify(remoteRepository, times(1 + errorRetryCount)).requestTranslations(word)
-        verify(localRepository, never()).addWordToHistory(word)
+        verify(remoteRepository, times(1 + errorRetryCount)).requestTranslations(WORD)
+        verify(localRepository, never()).addWordToHistory(WORD)
     }
 
     @Test
     fun getTranslations_NoLocalCache_ConnectionAvailable_emptyResponse() = runTest(testScheduler) {
 
         `when`(networkRepository.isConnectionAvailable()).thenReturn(true)
-        `when`(localRepository.getSearchResponseIdsByWord(word)).thenReturn(emptyList())
-        `when`(remoteRepository.requestTranslations(word)).thenReturn(emptyList())
+        `when`(localRepository.getSearchResponseIdsByWord(WORD)).thenReturn(emptyList())
+        `when`(remoteRepository.requestTranslations(WORD)).thenReturn(emptyList())
 
         assertEquals(
             TranslationResponseState.Success(emptyList()),
             translationInteractor.getTranslations(getWordsFlow()).first()
         )
 
-        verify(localRepository, never()).addWordToHistory(word)
+        verify(localRepository, never()).addWordToHistory(WORD)
     }
 
     @Test
     fun getTranslations_NoLocalCache_ConnectionAvailable_successResponse() = runTest(testScheduler) {
 
         `when`(networkRepository.isConnectionAvailable()).thenReturn(true)
-        `when`(localRepository.getSearchResponseIdsByWord(word)).thenReturn(emptyList())
+        `when`(localRepository.getSearchResponseIdsByWord(WORD)).thenReturn(emptyList())
 
-        val translationDtoList = listOf(TranslationDto(0, word, emptyList()))
-        `when`(remoteRepository.requestTranslations(word)).thenReturn(translationDtoList)
+        val translationDtoList = listOf(TranslationDto(0, WORD, emptyList()))
+        `when`(remoteRepository.requestTranslations(WORD)).thenReturn(translationDtoList)
 
         assertEquals(
             TranslationResponseState.Success(translationDtoList),
             translationInteractor.getTranslations(getWordsFlow()).first()
         )
 
-        verify(localRepository).addSearchResponse(SearchResponseEntity(word, translationDtoList.map { it.id }))
+        verify(localRepository).addSearchResponse(SearchResponseEntity(WORD, translationDtoList.map { it.id }))
         verify(localRepository).addTranslations(anyList())
         verify(localRepository).addMeanings(anyList())
-        verify(localRepository).addWordToHistory(word)
+        verify(localRepository).addWordToHistory(WORD)
     }
 
     private fun getWordsFlow() = MutableSharedFlow<String>(
@@ -161,6 +160,6 @@ class TranslationInteractorImplTest : BaseMockitoTest() {
         extraBufferCapacity = 0,
         onBufferOverflow = BufferOverflow.DROP_OLDEST
     ).apply {
-        tryEmit(word)
+        tryEmit(WORD)
     }
 }

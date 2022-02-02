@@ -21,8 +21,10 @@ import org.koin.test.mock.declareMock
 import org.mockito.Mockito.*
 import pan.alexander.dictionary.BuildConfig
 import pan.alexander.dictionary.di.ACTIVITY_RETAINED_SCOPE
+import pan.alexander.dictionary.di.AppModules.testModule
 import pan.alexander.dictionary.di.AppModules.vmModule
 import pan.alexander.dictionary.domain.history.HistoryInteractor
+import pan.alexander.dictionary.tests.WORD
 import java.io.IOException
 
 @ExperimentalCoroutinesApi
@@ -33,15 +35,13 @@ class HistoryViewModelTest : KoinTest {
 
     private lateinit var scope: Scope
 
-    private val word = "word"
-
     @get:Rule
     var rule: TestRule = InstantTaskExecutorRule()
 
     @get:Rule
     val koinTestRule = KoinTestRule.create {
         printLogger(if (BuildConfig.DEBUG) Level.ERROR else Level.NONE)
-        modules(vmModule)
+        modules(vmModule, testModule)
     }
 
     @get:Rule
@@ -83,7 +83,7 @@ class HistoryViewModelTest : KoinTest {
     fun getHistory_Success() = runTest {
 
         val interactor = scope.declareMock<HistoryInteractor>()
-        `when`(interactor.getHistory()).thenReturn(listOf(word))
+        `when`(interactor.getHistory()).thenReturn(listOf(WORD))
 
         val viewModel = get<HistoryViewModel>()
 
@@ -93,24 +93,24 @@ class HistoryViewModelTest : KoinTest {
 
         verify(interactor).getHistory()
 
-        assertEquals(listOf(word), viewModel.getViewStateLiveData().value)
+        assertEquals(listOf(WORD), viewModel.getViewStateLiveData().value)
     }
 
     @Test
     fun deleteWordFromHistory_Failed() = runTest {
 
         val interactor = scope.declareMock<HistoryInteractor>()
-        `when`(interactor.deleteWordFromHistory(word)).thenThrow(IOException::class.java)
+        `when`(interactor.deleteWordFromHistory(WORD)).thenThrow(IOException::class.java)
 
         val viewModel = get<HistoryViewModel>()
 
-        viewModel.deleteWordFromHistory(word)
+        viewModel.deleteWordFromHistory(WORD)
 
         delay(1)
 
         assertEquals(null, viewModel.getViewStateLiveData().value)
 
-        verify(interactor).deleteWordFromHistory(word)
+        verify(interactor).deleteWordFromHistory(WORD)
         verify(interactor, never()).getHistory()
     }
 
@@ -118,17 +118,17 @@ class HistoryViewModelTest : KoinTest {
     fun deleteWordFromHistory_Success() = runTest {
 
         val interactor = scope.declareMock<HistoryInteractor>()
-        `when`(interactor.getHistory()).thenReturn(listOf(word))
+        `when`(interactor.getHistory()).thenReturn(listOf(WORD))
 
         val viewModel = get<HistoryViewModel>()
 
-        viewModel.deleteWordFromHistory(word)
+        viewModel.deleteWordFromHistory(WORD)
 
         delay(1)
 
-        assertEquals(listOf(word), viewModel.getViewStateLiveData().value)
+        assertEquals(listOf(WORD), viewModel.getViewStateLiveData().value)
 
-        verify(interactor).deleteWordFromHistory(word)
+        verify(interactor).deleteWordFromHistory(WORD)
         verify(interactor).getHistory()
     }
 

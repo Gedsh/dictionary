@@ -16,6 +16,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import pan.alexander.dictionary.R
 import pan.alexander.dictionary.test.EspressoIdlingResource
+import pan.alexander.dictionary.tests.WORD
 import pan.alexander.dictionary.ui.MainActivity
 
 @LargeTest
@@ -46,7 +47,7 @@ class UserScenarioEspressoTest {
     fun userScenario_RequestTranslations() {
         onView(ViewMatchers.withId(R.id.search_fab)).perform(click())
         onView(ViewMatchers.withId(R.id.search_edit_text))
-            .perform(typeText("word"), pressImeActionButton())
+            .perform(typeText(WORD), pressImeActionButton())
         onView(ViewMatchers.withId(R.id.translation_recyclerview))
             .check(ViewAssertions.matches(isDisplayed()))
     }
