@@ -77,6 +77,8 @@ dependencies {
     androidTestImplementation(TestImpl.mockito_android)
     androidTestImplementation(TestImpl.espresso)
     androidTestImplementation(TestImpl.uiautomator)
+    debugImplementation(TestImpl.fragment_testing)
+    androidTestImplementation(TestImpl.espresso_contrib)
     implementation(TestImpl.espresso_idling)
 
     implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))

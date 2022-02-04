@@ -57,6 +57,7 @@ object TestImpl {
     const val ext = "androidx.test.ext:junit:${Versions.ext_junit}"
     const val espresso = "androidx.test.espresso:espresso-core:${Versions.espresso_core}"
     const val espresso_idling = "androidx.test.espresso:espresso-idling-resource:${Versions.espresso_core}"
+    const val espresso_contrib = "androidx.test.espresso:espresso-contrib:${Versions.espresso_contrib}"
     const val mockito_inline = "org.mockito:mockito-inline:${Versions.mockito_inline}"
     const val mockito_android = "org.mockito:mockito-android:${Versions.mockito_android}"
     const val coroutines_test = "org.jetbrains.kotlinx:kotlinx-coroutines-test:${Versions.coroutines_test}"
@@ -66,4 +67,5 @@ object TestImpl {
     const val robolectric = "org.robolectric:robolectric:${Versions.robolectric}"
     const val core_ktx = "androidx.test:core-ktx:${Versions.core_ktx}"
     const val uiautomator = "androidx.test.uiautomator:uiautomator:${Versions.uiautomator}"
+    const val fragment_testing = "androidx.fragment:fragment-testing:${Versions.fragment_testing}"
 }
